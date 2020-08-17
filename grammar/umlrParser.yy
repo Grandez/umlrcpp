@@ -9,6 +9,7 @@
 %code requires {
   #include <string>
   #include "umlr.h"
+  using namespace rcomp;
   class umlrDriver;
 }
 
@@ -31,7 +32,8 @@
    #include "umlrDriver.hh"
    using namespace std;
    rcomp::Unit *unitp = NULL;
-   R6 *R6Pend; 
+   rcomp::R6 *R6Pend; 
+   Function *funcPend;
 }
 
 
@@ -42,6 +44,9 @@
   STAR    "*"
   SLASH   "/"
 ;
+
+// Reserved
+%token <std::string> INHERIT
 
 %token <std::string> ASSIGN
 %token <std::string> ASSIGNG
@@ -84,15 +89,19 @@
 %token <std::string> ALGO
 
 %token <int> NUMBER "number"
-%type  <int> exp
 
-%type <std::string> imports
-%type <std::string> definition
-%type <std::string> def_name 
-%type <std::string> def_type
+%type <std::string>     imports
+%type <std::string>     def_name 
 
-%type <rcomp::R6> type_r6
-%type <rcomp::Function> type_function
+%type <rcomp::Definition> def_type
+%type <rcomp::Definition> definition
+%type <rcomp::R6>         type_r6
+%type <rcomp::Function>   type_function
+
+// FUNCTION
+
+%type <std::string> function_def
+%type <std::string> func_signature;
 
 %type <std::string> op_assign
           
@@ -102,9 +111,10 @@
 %type <std::string> datos
 
 
+
 // R6
-%type <rcomp::R6> R6_decl
-%type <std::string> R6_def
+
+%type <rcomp::R6> R6_def
 %type <std::string> R6_parts
 %type <std::string> R6_generator
 %type <std::string> R6_parent
@@ -113,6 +123,9 @@
 %type <std::string> R6_public
 %type <std::string> R6_private
 %type <std::string> R6_active
+
+%type <std::string> signos
+%type <std::string> comma_opt
 
 %printer { yyoutput << $$; } <*>;
 
@@ -130,13 +143,14 @@ cosas: %empty                 { cout << "Vacio\n"; }
      | cosas cosa             { unitp->tokens++;;   }
      ;
 
+/**
 cosa: imports
-    | definition   { unitp->add($1); } 
+    | definition   { } // unitp->add($1); } 
     ;
     
-imports: LIBRARY LPAR id RPAR { unitp.addLibrary($$3); }
+imports: LIBRARY LPAR ID RPAR { unitp.addLibrary($3); }
 
-definition: def_name op_assign def_type
+definition: def_name op_assign def_type { $3->name = $1; $$ = $3; }
           ;
           
 def_name: expr
@@ -149,26 +163,32 @@ def_type: type_r6
 type_r6: R6CLASS { R6Pend = new R6(); } R6_def { $$ = R6Pend; }
        ;
         
-type_function: FUNCTION 
+type_function: FUNCTION { funcPend = new Function(); } function_def { $$ = funcPend; }
              ;
           
-expr_def: expr op_assign
-        | expr_def def_function
-        | expr_def R6_decl { R6Pend->name = $1; unitp->addClass(R6Pend); }
-        ;
+// FUNCTION
 
+function_def: func_signature  {}
+            ;
+            
+func_signature: LPAR RPAR     {}
+              ;            
+// R6
        
-R6_def: LPAR R6_parts RPAR
+R6_def: LPAR R6_parts RPAR  {}
       ;
       
 R6_parts: R6_generator { R6Pend->generator = $1; } 
           R6_parent    { R6Pend->parent    = $1; }
           R6_scope
         ;
-        
+
+R6_generator: STRING { $$ = $1 } ;
+R6_parent:    comma_opt INHERIT ASSIGN ID { $$ = $3 } ;
+                    
 R6_scope: R6_scope_type
         | R6_scope  R6_scope_type
-        |
+        | %empty   { $$ = ""; }
         ;
 
 R6_scope_type: R6_public
@@ -176,29 +196,25 @@ R6_scope_type: R6_public
              | R6_active
              ;
              
-R6_public: COMMA PUBLIC ASSIGN
+R6_public: comma_opt PUBLIC ASSIGN
          ;
                               
-R6_private: COMMA PRIVATE ASSIGN
+R6_private: comma_opt PRIVATE ASSIGN
          ;
          
-R6_active: COMMA ACTIVE ASSIGN
+R6_active: comma_opt ACTIVE ASSIGN
          ;
-                                   
-expr-assign ::=  expr_unary op_assign 
-            ;
-            
+
+*/
+/////////////////////////////////////////////////////////////////////
+                                                   
 cosa: reserved
     | datos
     | signos
-    | ALGO  { unitp->add($1); }
+    | ALGO  { } // unitp->add($1); }
     ;
 
 
-op_assign: ASSIGN
-         | ASSIGNG
-         ;
-         
 reserved: FUNCTION     { $$ = $1; cout << "Function\n"; unitp->tokens++; }
         | R6CLASS      { $$ = $1; cout << "Clase\n";    }
         | R6CLASS_PKG  { $$ = $1; cout << "Clase\n";    }     
@@ -240,7 +256,15 @@ signos: op_assign
 
     ;
          
+op_assign: ASSIGN
+         | ASSIGNG
+         ;
+         
 
+comma_opt: COMMA
+         | %empty { $$ = ""; }
+         ;
+          
 %%
 void yy::umlrParser::error (const location_type& l, const std::string& m) {
   driver.error (l, m);

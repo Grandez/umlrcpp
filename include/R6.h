@@ -9,12 +9,13 @@
 #define R6_H_
 
 #include <string>
+#include "Definition.h"
 
 namespace rcomp {
 
 using namespace std;
 
-class R6 {
+class R6 : Definition {
 public:
 	R6();
 	virtual ~R6();

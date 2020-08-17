@@ -8,6 +8,7 @@
 #ifndef UMLR_H_
 #define UMLR_H_
 
+#include "Definition.h"
 #include "R6.h"
 #include "Function.h"
 

@@ -9,11 +9,13 @@
 #define FUNCTION_H_
 
 #include <string>
+#include "Definition.h"
+
 using namespace std;
 
 namespace rcomp {
 
-class Function {
+class Function : Definition {
 public:
 	Function();
 	virtual ~Function();

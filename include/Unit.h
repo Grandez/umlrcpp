@@ -28,14 +28,14 @@ class Unit {
 	  unsigned int tokens = 0;
 	  set<string> libraries; // Imports
 	  vector<string> refs;       // Packages referenced as pkg::method
-	  void add (void* object);
+	  void add(Definition *object);
 	  void addLibrary(string library);
   private:
-	  map<string, R6&> r6;
-	  map<string, Function&> functions;
+	  map<string, R6 *> r6;
+	  map<string, Function *> functions;
 	  template<typename Base, typename T>
 	  inline bool instanceof(const T*) { return is_base_of<Base, T>::value; }
-	  int    lines;
+	  int    lines = 0;
 	    std::set<std::string> setOfNumbers;
 
 };
