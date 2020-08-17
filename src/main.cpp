@@ -6,6 +6,7 @@ using namespace std;
 int main (int argc, char *argv[]) {
   int res = 0;
   umlrDriver driver;
+  cout << "************************************   INICIO" << endl << flush;
   for (int i = 1; i < argc; ++i)
     if (argv[i] == std::string ("-p"))
       driver.trace_parsing = true;
@@ -15,8 +16,24 @@ int main (int argc, char *argv[]) {
       std::cout << driver.result << std::endl;
     else
       res = 1;
-
+  cout << "************************************   FIN" << endl << flush;
   // Aqui
+
+  Unit *unit = &driver.unit;
+
+  for (auto it=unit->raros.begin(); it != unit->raros.end(); ++it)
+          cout << ' ' << *it;
+
+
+  cout << "Librerias: " << unit->libraries.size() << endl;
+
+  if (unit->libraries.size() == 0) cout << "Ninguna";
+
+  set<string>::iterator itl;
+  for (auto itl = unit->libraries.begin(); itl != unit->libraries.end(); ++itl) {
+      cout << *itl;
+  }
+  cout << endl;
 
   //rcomp::Unit *unit = driver.unit;
   cout << "tokens leidos: " << driver.unit.tokens << endl;

@@ -6,9 +6,9 @@ SET OLDCD=%CD%
 CD D:\cpp\umlrcpp\generated
 IF ERRORLEVEL  1 GOTO :ERROR
 DEL /Q *.*
-..\tools\bison -l -o umlrParser.cpp ..\grammar\umlrParser.yy
+..\tools\bison -l -v -k --debug -o umlrParser.cpp ..\grammar\umlrParser.yy
 IF ERRORLEVEL  1 GOTO :ERROR 
-..\tools\flex -d -o .\umlrScanner.cpp ..\grammar\umlrScanner.ll
+..\tools\flex -d -L -o .\umlrScanner.cpp ..\grammar\umlrScanner.ll
 IF ERRORLEVEL  1 GOTO :ERROR 
 
 CD %OLDCD%

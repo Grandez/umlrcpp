@@ -1,11 +1,3 @@
-#' La clase para interactuar con plantuml
-#' @title R6PlantUML
-#' @docType class
-#' @description  La descripcion.
-#' @import R6
-#' @export
-# #' @import magick
-#'
 library(R6)
 UML = R6::R6Class("R6UML",
                        public = list(
@@ -46,7 +38,7 @@ UML = R6::R6Class("R6UML",
                            ,link              = function(data = NULL, caption = NULL) {
                                imgFile = private$makeImage(data, type)
                                target  = file.path(self$getOutputDir(), basename(imgFile))
-                               paste0('[![', caption, "](", target, " \'", caption, "\')](https://127.0.0.1)")
+#                               paste0('[![', caption, "](", target, " \'", caption, "\')](https://127.0.0.1)")
                            }
                            #' @description Almacena el fichero de la imagen en el sistema de archivos
                            #' @seealso [plot()] para generacion en linea
@@ -110,7 +102,7 @@ UML = R6::R6Class("R6UML",
                            ,umlClass             = function (object, full=FALSE, deep = FALSE) {
                                if (isS4(object))            return (private$parseS4(object, full, deep))
                                if ("R6" %in% class(object)) return (private$parseR6(object, full, deep))
-                               warning("'object' is not an instance of S4 or R6 Classes"))
+                               warning("'object' is not an instance of S4 or R6 Classes")
                            }
 
                            #' @description

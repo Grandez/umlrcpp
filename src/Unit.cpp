@@ -25,6 +25,10 @@ namespace rcomp {
    void Unit::addLibrary(string library) {
 	   libraries.insert(library);
    }
+   void Unit::raro(string txt) {
+	   raros.insert(txt);
+   }
+
    void Unit::add(Definition *object) {
 
 	   pair<string,Definition *> p = pair<string,Definition *>();

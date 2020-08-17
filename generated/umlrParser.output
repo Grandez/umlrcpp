@@ -1,0 +1,864 @@
+Nonterminals useless in grammar
+
+    parameters_opt
+    parameters_def
+    parameters_list
+    parameters_list_list
+    parameters
+    parameter
+
+
+Terminals unused in grammar
+
+    "+"
+    "_"
+    "*"
+    "/"
+    INHERIT
+    LBRA
+    RBRA
+    LIDX
+    RIDX
+    DOLLAR
+    COMMA
+    SEMMI
+    FUNCTION
+    R6CLASS
+    R6CLASS_PKG
+    ACTIVE
+    IF
+    IFELSE
+    ELSE
+    PUBLIC
+    PRIVATE
+    LIST
+    INIT
+    DEST
+    TRUE
+    FALSE
+    NULL
+    NA
+    ELLIPSIS
+    NEG
+    ID_PKG
+    ID_INTERNAL
+    ALGO
+
+
+Rules useless in grammar
+
+   44 parameters_opt: parameters_def
+   45               | %empty
+
+   46 parameters_def: LPAR parameters_list RPAR
+   47               | LIDX parameters_list_list RIDX
+
+   48 parameters_list: parameters
+   49                | %empty
+
+   50 parameters_list_list: LIDX parameters_list RIDX
+   51                     | parameters_list
+
+   52 parameters: parameter
+   53           | parameters COMMA parameter
+
+   54 parameter: expression
+
+
+Grammar
+
+    0 $accept: rsource "end of file"
+
+    1 rsource: declarations
+    2        | %empty
+
+    3 declarations: declaration
+    4             | declarations declaration
+
+    5 declaration: library
+    6            | expression
+
+    7 expression: conditional_expression
+    8           | primary_expression op_assign expression
+
+    9 conditional_expression: logical_or_expression
+
+   10 logical_or_expression: logical_and_expression
+   11                      | logical_or_expression OR logical_and_expression
+
+   12 logical_and_expression: inclusive_or_expression
+   13                       | logical_and_expression AND inclusive_or_expression
+
+   14 inclusive_or_expression: and_expression
+   15                        | inclusive_or_expression OR1 and_expression
+
+   16 and_expression: relational_expression
+   17               | and_expression AND1 relational_expression
+
+   18 relational_expression: arit_expression
+   19                      | relational_expression op_rel arit_expression
+
+   20 arit_expression: primary_expression
+   21                | arit_expression op_arit primary_expression
+
+   22 primary_expression: identifier
+   23                   | constant
+   24                   | LPAR expression RPAR
+
+   25 library: LIBRARY LPAR library_name library_parms RPAR
+
+   26 library_name: ID
+   27             | STRING
+
+   28 library_parms: %empty
+
+   29 identifier: ID
+
+   30 constant: STRING
+   31         | NUMBER
+
+   32 op_assign: ASSIGN
+   33          | ASSIGNG
+
+   34 op_rel: EQU
+   35       | NEQ
+   36       | GTE
+   37       | LTE
+   38       | GT
+   39       | LT
+
+   40 op_arit: PLUS
+   41        | MINUS
+   42        | MULT
+   43        | DIV
+
+
+Terminals, with rules where they appear
+
+    "end of file" (0) 0
+    error (256)
+    "+" (258)
+    "_" (259)
+    "*" (260)
+    "/" (261)
+    INHERIT <std::string> (262)
+    ASSIGN <std::string> (263) 32
+    ASSIGNG <std::string> (264) 33
+    LPAR <std::string> (265) 24 25
+    RPAR <std::string> (266) 24 25
+    LBRA <std::string> (267)
+    RBRA <std::string> (268)
+    LIDX <std::string> (269)
+    RIDX <std::string> (270)
+    DOLLAR <std::string> (271)
+    COMMA <std::string> (272)
+    SEMMI <std::string> (273)
+    FUNCTION <std::string> (274)
+    R6CLASS <std::string> (275)
+    R6CLASS_PKG <std::string> (276)
+    ACTIVE <std::string> (277)
+    IF <std::string> (278)
+    IFELSE <std::string> (279)
+    ELSE <std::string> (280)
+    LIBRARY <std::string> (281) 25
+    PUBLIC <std::string> (282)
+    PRIVATE <std::string> (283)
+    LIST <std::string> (284)
+    INIT <std::string> (285)
+    DEST <std::string> (286)
+    TRUE <std::string> (287)
+    FALSE <std::string> (288)
+    NULL <std::string> (289)
+    NA <std::string> (290)
+    ELLIPSIS <std::string> (291)
+    EQU <std::string> (292) 34
+    NEQ <std::string> (293) 35
+    GTE <std::string> (294) 36
+    LTE <std::string> (295) 37
+    GT <std::string> (296) 38
+    LT <std::string> (297) 39
+    AND <std::string> (298) 13
+    OR <std::string> (299) 11
+    AND1 <std::string> (300) 17
+    OR1 <std::string> (301) 15
+    NEG <std::string> (302)
+    PLUS <std::string> (303) 40
+    MINUS <std::string> (304) 41
+    MULT <std::string> (305) 42
+    DIV <std::string> (306) 43
+    ID <std::string> (307) 26 29
+    ID_PKG <std::string> (308)
+    ID_INTERNAL <std::string> (309)
+    STRING <std::string> (310) 27 30
+    NUMBER <std::string> (311) 31
+    ALGO <std::string> (312)
+
+
+Nonterminals, with rules where they appear
+
+    $accept (58)
+        on left: 0
+    rsource <std::string> (59)
+        on left: 1 2
+        on right: 0
+    declarations <std::string> (60)
+        on left: 3 4
+        on right: 1 4
+    declaration <std::string> (61)
+        on left: 5 6
+        on right: 3 4
+    expression <std::string> (62)
+        on left: 7 8
+        on right: 6 8 24
+    conditional_expression <std::string> (63)
+        on left: 9
+        on right: 7
+    logical_or_expression <std::string> (64)
+        on left: 10 11
+        on right: 9 11
+    logical_and_expression <std::string> (65)
+        on left: 12 13
+        on right: 10 11 13
+    inclusive_or_expression <std::string> (66)
+        on left: 14 15
+        on right: 12 13 15
+    and_expression <std::string> (67)
+        on left: 16 17
+        on right: 14 15 17
+    relational_expression <std::string> (68)
+        on left: 18 19
+        on right: 16 17 19
+    arit_expression <std::string> (69)
+        on left: 20 21
+        on right: 18 19 21
+    primary_expression <std::string> (70)
+        on left: 22 23 24
+        on right: 8 20 21
+    library <std::string> (71)
+        on left: 25
+        on right: 5
+    library_name <std::string> (72)
+        on left: 26 27
+        on right: 25
+    library_parms <std::string> (73)
+        on left: 28
+        on right: 25
+    identifier <std::string> (74)
+        on left: 29
+        on right: 22
+    constant <std::string> (75)
+        on left: 30 31
+        on right: 23
+    op_assign <std::string> (76)
+        on left: 32 33
+        on right: 8
+    op_rel <std::string> (77)
+        on left: 34 35 36 37 38 39
+        on right: 19
+    op_arit <std::string> (78)
+        on left: 40 41 42 43
+        on right: 21
+
+
+State 0
+
+    0 $accept: . rsource "end of file"
+
+    LPAR     shift, and go to state 1
+    LIBRARY  shift, and go to state 2
+    ID       shift, and go to state 3
+    STRING   shift, and go to state 4
+    NUMBER   shift, and go to state 5
+
+    $default  reduce using rule 2 (rsource)
+
+    rsource                  go to state 6
+    declarations             go to state 7
+    declaration              go to state 8
+    expression               go to state 9
+    conditional_expression   go to state 10
+    logical_or_expression    go to state 11
+    logical_and_expression   go to state 12
+    inclusive_or_expression  go to state 13
+    and_expression           go to state 14
+    relational_expression    go to state 15
+    arit_expression          go to state 16
+    primary_expression       go to state 17
+    library                  go to state 18
+    identifier               go to state 19
+    constant                 go to state 20
+
+
+State 1
+
+   24 primary_expression: LPAR . expression RPAR
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    expression               go to state 21
+    conditional_expression   go to state 10
+    logical_or_expression    go to state 11
+    logical_and_expression   go to state 12
+    inclusive_or_expression  go to state 13
+    and_expression           go to state 14
+    relational_expression    go to state 15
+    arit_expression          go to state 16
+    primary_expression       go to state 17
+    identifier               go to state 19
+    constant                 go to state 20
+
+
+State 2
+
+   25 library: LIBRARY . LPAR library_name library_parms RPAR
+
+    LPAR  shift, and go to state 22
+
+
+State 3
+
+   29 identifier: ID .
+
+    $default  reduce using rule 29 (identifier)
+
+
+State 4
+
+   30 constant: STRING .
+
+    $default  reduce using rule 30 (constant)
+
+
+State 5
+
+   31 constant: NUMBER .
+
+    $default  reduce using rule 31 (constant)
+
+
+State 6
+
+    0 $accept: rsource . "end of file"
+
+    "end of file"  shift, and go to state 23
+
+
+State 7
+
+    1 rsource: declarations .
+    4 declarations: declarations . declaration
+
+    LPAR     shift, and go to state 1
+    LIBRARY  shift, and go to state 2
+    ID       shift, and go to state 3
+    STRING   shift, and go to state 4
+    NUMBER   shift, and go to state 5
+
+    $default  reduce using rule 1 (rsource)
+
+    declaration              go to state 24
+    expression               go to state 9
+    conditional_expression   go to state 10
+    logical_or_expression    go to state 11
+    logical_and_expression   go to state 12
+    inclusive_or_expression  go to state 13
+    and_expression           go to state 14
+    relational_expression    go to state 15
+    arit_expression          go to state 16
+    primary_expression       go to state 17
+    library                  go to state 18
+    identifier               go to state 19
+    constant                 go to state 20
+
+
+State 8
+
+    3 declarations: declaration .
+
+    $default  reduce using rule 3 (declarations)
+
+
+State 9
+
+    6 declaration: expression .
+
+    $default  reduce using rule 6 (declaration)
+
+
+State 10
+
+    7 expression: conditional_expression .
+
+    $default  reduce using rule 7 (expression)
+
+
+State 11
+
+    9 conditional_expression: logical_or_expression .
+   11 logical_or_expression: logical_or_expression . OR logical_and_expression
+
+    OR  shift, and go to state 25
+
+    $default  reduce using rule 9 (conditional_expression)
+
+
+State 12
+
+   10 logical_or_expression: logical_and_expression .
+   13 logical_and_expression: logical_and_expression . AND inclusive_or_expression
+
+    AND  shift, and go to state 26
+
+    $default  reduce using rule 10 (logical_or_expression)
+
+
+State 13
+
+   12 logical_and_expression: inclusive_or_expression .
+   15 inclusive_or_expression: inclusive_or_expression . OR1 and_expression
+
+    OR1  shift, and go to state 27
+
+    $default  reduce using rule 12 (logical_and_expression)
+
+
+State 14
+
+   14 inclusive_or_expression: and_expression .
+   17 and_expression: and_expression . AND1 relational_expression
+
+    AND1  shift, and go to state 28
+
+    $default  reduce using rule 14 (inclusive_or_expression)
+
+
+State 15
+
+   16 and_expression: relational_expression .
+   19 relational_expression: relational_expression . op_rel arit_expression
+
+    EQU  shift, and go to state 29
+    NEQ  shift, and go to state 30
+    GTE  shift, and go to state 31
+    LTE  shift, and go to state 32
+    GT   shift, and go to state 33
+    LT   shift, and go to state 34
+
+    $default  reduce using rule 16 (and_expression)
+
+    op_rel  go to state 35
+
+
+State 16
+
+   18 relational_expression: arit_expression .
+   21 arit_expression: arit_expression . op_arit primary_expression
+
+    PLUS   shift, and go to state 36
+    MINUS  shift, and go to state 37
+    MULT   shift, and go to state 38
+    DIV    shift, and go to state 39
+
+    $default  reduce using rule 18 (relational_expression)
+
+    op_arit  go to state 40
+
+
+State 17
+
+    8 expression: primary_expression . op_assign expression
+   20 arit_expression: primary_expression .
+
+    ASSIGN   shift, and go to state 41
+    ASSIGNG  shift, and go to state 42
+
+    $default  reduce using rule 20 (arit_expression)
+
+    op_assign  go to state 43
+
+
+State 18
+
+    5 declaration: library .
+
+    $default  reduce using rule 5 (declaration)
+
+
+State 19
+
+   22 primary_expression: identifier .
+
+    $default  reduce using rule 22 (primary_expression)
+
+
+State 20
+
+   23 primary_expression: constant .
+
+    $default  reduce using rule 23 (primary_expression)
+
+
+State 21
+
+   24 primary_expression: LPAR expression . RPAR
+
+    RPAR  shift, and go to state 44
+
+
+State 22
+
+   25 library: LIBRARY LPAR . library_name library_parms RPAR
+
+    ID      shift, and go to state 45
+    STRING  shift, and go to state 46
+
+    library_name  go to state 47
+
+
+State 23
+
+    0 $accept: rsource "end of file" .
+
+    $default  accept
+
+
+State 24
+
+    4 declarations: declarations declaration .
+
+    $default  reduce using rule 4 (declarations)
+
+
+State 25
+
+   11 logical_or_expression: logical_or_expression OR . logical_and_expression
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    logical_and_expression   go to state 48
+    inclusive_or_expression  go to state 13
+    and_expression           go to state 14
+    relational_expression    go to state 15
+    arit_expression          go to state 16
+    primary_expression       go to state 49
+    identifier               go to state 19
+    constant                 go to state 20
+
+
+State 26
+
+   13 logical_and_expression: logical_and_expression AND . inclusive_or_expression
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    inclusive_or_expression  go to state 50
+    and_expression           go to state 14
+    relational_expression    go to state 15
+    arit_expression          go to state 16
+    primary_expression       go to state 49
+    identifier               go to state 19
+    constant                 go to state 20
+
+
+State 27
+
+   15 inclusive_or_expression: inclusive_or_expression OR1 . and_expression
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    and_expression         go to state 51
+    relational_expression  go to state 15
+    arit_expression        go to state 16
+    primary_expression     go to state 49
+    identifier             go to state 19
+    constant               go to state 20
+
+
+State 28
+
+   17 and_expression: and_expression AND1 . relational_expression
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    relational_expression  go to state 52
+    arit_expression        go to state 16
+    primary_expression     go to state 49
+    identifier             go to state 19
+    constant               go to state 20
+
+
+State 29
+
+   34 op_rel: EQU .
+
+    $default  reduce using rule 34 (op_rel)
+
+
+State 30
+
+   35 op_rel: NEQ .
+
+    $default  reduce using rule 35 (op_rel)
+
+
+State 31
+
+   36 op_rel: GTE .
+
+    $default  reduce using rule 36 (op_rel)
+
+
+State 32
+
+   37 op_rel: LTE .
+
+    $default  reduce using rule 37 (op_rel)
+
+
+State 33
+
+   38 op_rel: GT .
+
+    $default  reduce using rule 38 (op_rel)
+
+
+State 34
+
+   39 op_rel: LT .
+
+    $default  reduce using rule 39 (op_rel)
+
+
+State 35
+
+   19 relational_expression: relational_expression op_rel . arit_expression
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    arit_expression     go to state 53
+    primary_expression  go to state 49
+    identifier          go to state 19
+    constant            go to state 20
+
+
+State 36
+
+   40 op_arit: PLUS .
+
+    $default  reduce using rule 40 (op_arit)
+
+
+State 37
+
+   41 op_arit: MINUS .
+
+    $default  reduce using rule 41 (op_arit)
+
+
+State 38
+
+   42 op_arit: MULT .
+
+    $default  reduce using rule 42 (op_arit)
+
+
+State 39
+
+   43 op_arit: DIV .
+
+    $default  reduce using rule 43 (op_arit)
+
+
+State 40
+
+   21 arit_expression: arit_expression op_arit . primary_expression
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    primary_expression  go to state 54
+    identifier          go to state 19
+    constant            go to state 20
+
+
+State 41
+
+   32 op_assign: ASSIGN .
+
+    $default  reduce using rule 32 (op_assign)
+
+
+State 42
+
+   33 op_assign: ASSIGNG .
+
+    $default  reduce using rule 33 (op_assign)
+
+
+State 43
+
+    8 expression: primary_expression op_assign . expression
+
+    LPAR    shift, and go to state 1
+    ID      shift, and go to state 3
+    STRING  shift, and go to state 4
+    NUMBER  shift, and go to state 5
+
+    expression               go to state 55
+    conditional_expression   go to state 10
+    logical_or_expression    go to state 11
+    logical_and_expression   go to state 12
+    inclusive_or_expression  go to state 13
+    and_expression           go to state 14
+    relational_expression    go to state 15
+    arit_expression          go to state 16
+    primary_expression       go to state 17
+    identifier               go to state 19
+    constant                 go to state 20
+
+
+State 44
+
+   24 primary_expression: LPAR expression RPAR .
+
+    $default  reduce using rule 24 (primary_expression)
+
+
+State 45
+
+   26 library_name: ID .
+
+    $default  reduce using rule 26 (library_name)
+
+
+State 46
+
+   27 library_name: STRING .
+
+    $default  reduce using rule 27 (library_name)
+
+
+State 47
+
+   25 library: LIBRARY LPAR library_name . library_parms RPAR
+
+    $default  reduce using rule 28 (library_parms)
+
+    library_parms  go to state 56
+
+
+State 48
+
+   11 logical_or_expression: logical_or_expression OR logical_and_expression .
+   13 logical_and_expression: logical_and_expression . AND inclusive_or_expression
+
+    AND  shift, and go to state 26
+
+    $default  reduce using rule 11 (logical_or_expression)
+
+
+State 49
+
+   20 arit_expression: primary_expression .
+
+    $default  reduce using rule 20 (arit_expression)
+
+
+State 50
+
+   13 logical_and_expression: logical_and_expression AND inclusive_or_expression .
+   15 inclusive_or_expression: inclusive_or_expression . OR1 and_expression
+
+    OR1  shift, and go to state 27
+
+    $default  reduce using rule 13 (logical_and_expression)
+
+
+State 51
+
+   15 inclusive_or_expression: inclusive_or_expression OR1 and_expression .
+   17 and_expression: and_expression . AND1 relational_expression
+
+    AND1  shift, and go to state 28
+
+    $default  reduce using rule 15 (inclusive_or_expression)
+
+
+State 52
+
+   17 and_expression: and_expression AND1 relational_expression .
+   19 relational_expression: relational_expression . op_rel arit_expression
+
+    EQU  shift, and go to state 29
+    NEQ  shift, and go to state 30
+    GTE  shift, and go to state 31
+    LTE  shift, and go to state 32
+    GT   shift, and go to state 33
+    LT   shift, and go to state 34
+
+    $default  reduce using rule 17 (and_expression)
+
+    op_rel  go to state 35
+
+
+State 53
+
+   19 relational_expression: relational_expression op_rel arit_expression .
+   21 arit_expression: arit_expression . op_arit primary_expression
+
+    PLUS   shift, and go to state 36
+    MINUS  shift, and go to state 37
+    MULT   shift, and go to state 38
+    DIV    shift, and go to state 39
+
+    $default  reduce using rule 19 (relational_expression)
+
+    op_arit  go to state 40
+
+
+State 54
+
+   21 arit_expression: arit_expression op_arit primary_expression .
+
+    $default  reduce using rule 21 (arit_expression)
+
+
+State 55
+
+    8 expression: primary_expression op_assign expression .
+
+    $default  reduce using rule 8 (expression)
+
+
+State 56
+
+   25 library: LIBRARY LPAR library_name library_parms . RPAR
+
+    RPAR  shift, and go to state 57
+
+
+State 57
+
+   25 library: LIBRARY LPAR library_name library_parms RPAR .
+
+    $default  reduce using rule 25 (library)

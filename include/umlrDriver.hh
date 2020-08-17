@@ -23,6 +23,8 @@ public:
   // Handling the scanner.
   void scan_begin ();
   void scan_end ();
+  void entra(string txt);
+  void sale(string txt);
   bool trace_scanning;
   // Run the parser on file F.
   // Return 0 on success.

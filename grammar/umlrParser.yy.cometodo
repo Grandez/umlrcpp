@@ -1,0 +1,210 @@
+%skeleton "lalr1.cc" /* -*- C++ -*- */
+%require "3.0.4"
+%defines
+%define api.parser.class {umlrParser}
+%define api.token.constructor
+%define api.value.type variant
+%define parse.assert
+
+%code requires {
+  #include <string>
+  #include "umlr.h"
+  using namespace rcomp;
+  class umlrDriver;
+}
+
+// The parsing context.
+%param { umlrDriver& driver }
+
+%locations
+%initial-action {
+  // Initialize the initial location.
+  @$.begin.filename = @$.end.filename = &driver.file;
+  std::cout << "Fichero: " << driver.file << std::endl << std::flush;
+  unitp = &driver.unit;
+};
+
+// %define parse.trace
+%define parse.error verbose
+%define api.token.prefix {TOK_}
+
+%left "+" "-";
+%left "*" "/";
+
+%code {
+   #include "umlrDriver.hh"
+   using namespace std;
+   rcomp::Unit *unitp = NULL;
+   rcomp::R6 *R6Pend; 
+   Function *funcPend;
+
+}
+
+
+%token END  0  "end of file" ;
+
+// Reserved
+%token <std::string> INHERIT
+
+%token <std::string> ASSIGN
+%token <std::string> ASSIGNG
+%token <std::string> LPAR
+%token <std::string> RPAR
+%token <std::string> LBRA
+%token <std::string> RBRA
+%token <std::string> LIDX
+%token <std::string> RIDX
+%token <std::string> LIDX2
+%token <std::string> RIDX2
+%token <std::string> DOLLAR
+%token <std::string> COMMA
+%token <std::string> SEMMI
+
+%token <std::string> FUNCTION
+%token <std::string> R6CLASS
+%token <std::string> R6CLASS_PKG
+%token <std::string> ACTIVE
+%token <std::string> IF
+%token <std::string> IFELSE
+%token <std::string> ELSE
+%token <std::string> LIBRARY
+%token <std::string> PUBLIC
+%token <std::string> PRIVATE
+%token <std::string> LIST
+%token <std::string> INIT
+%token <std::string> DEST
+%token <std::string> TRUE
+%token <std::string> FALSE
+%token <std::string> NULL
+%token <std::string> NA
+%token <std::string> ELLIPSIS
+
+%token <std::string> IDENTIFIER "identifier"
+%token <std::string> ID
+%token <std::string> ID_PKG
+%token <std::string> ID_INTERNAL
+%token <std::string> STRING
+%token <std::string> ALGO
+
+
+///////////////////////////////////////////////
+/// Types
+///////////////////////////////////////////////
+
+%type <std::string> reserved
+%type <std::string> reserved2
+
+%type <std::string> rsource
+%type <std::string> blocks 
+%type <std::string> cosas
+%type <std::string> eat_all
+%type <std::string> eat_things
+%type <std::string> eat_block
+%type <std::string> eat_non_block
+%type <std::string> eat_cosas
+%type <std::string> eat_cosa
+
+
+%type <std::string> datos
+%type <std::string> signos
+%type <std::string> op_assign
+
+%printer { yyoutput << $$; } <*>;
+
+%%
+
+%start rsource;
+
+rsource: blocks { cout << "*********************   PARSER ACABADO *******************************\n"; } // { driver.result = $1; }
+     ;
+     
+blocks: %empty                 { cout << "Vacio\n"; }
+      | cosas                  { cout << "Acaba cosas\n" << flush;  }
+     ;
+
+
+cosas: { driver.entra("cosas");  } eat_all { driver.sale("cosas"); $$ = $2; }
+     ;
+     
+     
+eat_all: { driver.entra("eat_all");  } eat_things { driver.sale("eat_all 1"); $$ = $2; }
+       | eat_all eat_things { driver.sale("eat_all 2"); $$ = $2; }
+       ;
+
+eat_things: eat_cosa
+          ;
+/**                 
+eat_things: eat_block
+          | eat_non_block
+          ;
+
+eat_block: LPAR eat_things  RPAR   {  }
+         | LBRA eat_things  RBRA   {  }
+         | LIDX eat_things  RIDX   {  }
+         | LIDX2 eat_things RIDX2  {  }
+         ;
+
+eat_non_block: eat_cosas
+             | eat_non_block eat_cosas
+             ;                    
+
+eat_cosas: eat_cosa
+         | eat_cosas eat_cosa
+         ;
+*/
+                                                   
+eat_cosa: reserved
+    | reserved2
+    | datos
+    | signos
+    | op_assign
+    | ALGO  { unitp->raro($1); }
+    
+    ;
+
+/////////////////////////////////////////////////////////////////////
+
+reserved: FUNCTION     { $$ = $1; cout << "Function\n"; unitp->tokens++; }
+        | R6CLASS      { $$ = $1; cout << "Clase\n";    }
+        | R6CLASS_PKG  { $$ = $1; cout << "Clase\n";    }     
+    |    IF
+    | IFELSE
+    | ELSE
+    | PUBLIC
+    | PRIVATE
+    | ACTIVE
+    | LIST
+    | INIT
+    | DEST
+    | TRUE
+    | FALSE
+    | NULL
+    | NA
+    | ELLIPSIS
+ ;
+
+reserved2 :  LIBRARY
+          ;
+           
+datos: ID          { $$ = $1; cout << "Id: " << $1 << "\n"; }
+     | ID_PKG      { $$ = $1; cout << "Id: " << $1 << "\n"; }
+     | ID_INTERNAL { $$ = $1; cout << "Id: " << $1 << "\n"; }
+     | STRING     { $$ = $1; cout << "Cadena\n"; }
+     ;
+         
+signos:  DOLLAR
+      | COMMA
+     | SEMMI
+
+    ;
+         
+op_assign: ASSIGN
+         | ASSIGNG
+         ;
+         
+
+%%
+
+void yy::umlrParser::error (const location_type& l, const std::string& m) {
+  driver.error (l, m);
+}

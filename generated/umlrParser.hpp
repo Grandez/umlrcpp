@@ -386,9 +386,6 @@ namespace yy {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
-      // "number"
-      char dummy1[sizeof (int)];
-
       // INHERIT
       // ASSIGN
       // ASSIGNG
@@ -398,8 +395,6 @@ namespace yy {
       // RBRA
       // LIDX
       // RIDX
-      // LIDX2
-      // RIDX2
       // DOLLAR
       // COMMA
       // SEMMI
@@ -421,19 +416,48 @@ namespace yy {
       // NULL
       // NA
       // ELLIPSIS
-      // "identifier"
+      // EQU
+      // NEQ
+      // GTE
+      // LTE
+      // GT
+      // LT
+      // AND
+      // OR
+      // AND1
+      // OR1
+      // NEG
+      // PLUS
+      // MINUS
+      // MULT
+      // DIV
       // ID
       // ID_PKG
       // ID_INTERNAL
       // STRING
+      // NUMBER
       // ALGO
-      // cosas
-      // cosa
-      // reserved
-      // datos
-      // signos
+      // rsource
+      // declarations
+      // declaration
+      // expression
+      // conditional_expression
+      // logical_or_expression
+      // logical_and_expression
+      // inclusive_or_expression
+      // and_expression
+      // relational_expression
+      // arit_expression
+      // primary_expression
+      // library
+      // library_name
+      // library_parms
+      // identifier
+      // constant
       // op_assign
-      char dummy2[sizeof (std::string)];
+      // op_rel
+      // op_arit
+      char dummy1[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -482,10 +506,6 @@ namespace yy {
       enum yytokentype
       {
         TOK_END = 0,
-        TOK_MINUS = 258,
-        TOK_PLUS = 259,
-        TOK_STAR = 260,
-        TOK_SLASH = 261,
         TOK_INHERIT = 262,
         TOK_ASSIGN = 263,
         TOK_ASSIGNG = 264,
@@ -495,36 +515,48 @@ namespace yy {
         TOK_RBRA = 268,
         TOK_LIDX = 269,
         TOK_RIDX = 270,
-        TOK_LIDX2 = 271,
-        TOK_RIDX2 = 272,
-        TOK_DOLLAR = 273,
-        TOK_COMMA = 274,
-        TOK_SEMMI = 275,
-        TOK_FUNCTION = 276,
-        TOK_R6CLASS = 277,
-        TOK_R6CLASS_PKG = 278,
-        TOK_ACTIVE = 279,
-        TOK_IF = 280,
-        TOK_IFELSE = 281,
-        TOK_ELSE = 282,
-        TOK_LIBRARY = 283,
-        TOK_PUBLIC = 284,
-        TOK_PRIVATE = 285,
-        TOK_LIST = 286,
-        TOK_INIT = 287,
-        TOK_DEST = 288,
-        TOK_TRUE = 289,
-        TOK_FALSE = 290,
-        TOK_NULL = 291,
-        TOK_NA = 292,
-        TOK_ELLIPSIS = 293,
-        TOK_IDENTIFIER = 294,
-        TOK_ID = 295,
-        TOK_ID_PKG = 296,
-        TOK_ID_INTERNAL = 297,
-        TOK_STRING = 298,
-        TOK_ALGO = 299,
-        TOK_NUMBER = 300
+        TOK_DOLLAR = 271,
+        TOK_COMMA = 272,
+        TOK_SEMMI = 273,
+        TOK_FUNCTION = 274,
+        TOK_R6CLASS = 275,
+        TOK_R6CLASS_PKG = 276,
+        TOK_ACTIVE = 277,
+        TOK_IF = 278,
+        TOK_IFELSE = 279,
+        TOK_ELSE = 280,
+        TOK_LIBRARY = 281,
+        TOK_PUBLIC = 282,
+        TOK_PRIVATE = 283,
+        TOK_LIST = 284,
+        TOK_INIT = 285,
+        TOK_DEST = 286,
+        TOK_TRUE = 287,
+        TOK_FALSE = 288,
+        TOK_NULL = 289,
+        TOK_NA = 290,
+        TOK_ELLIPSIS = 291,
+        TOK_EQU = 292,
+        TOK_NEQ = 293,
+        TOK_GTE = 294,
+        TOK_LTE = 295,
+        TOK_GT = 296,
+        TOK_LT = 297,
+        TOK_AND = 298,
+        TOK_OR = 299,
+        TOK_AND1 = 300,
+        TOK_OR1 = 301,
+        TOK_NEG = 302,
+        TOK_PLUS = 303,
+        TOK_MINUS = 304,
+        TOK_MULT = 305,
+        TOK_DIV = 306,
+        TOK_ID = 307,
+        TOK_ID_PKG = 308,
+        TOK_ID_INTERNAL = 309,
+        TOK_STRING = 310,
+        TOK_NUMBER = 311,
+        TOK_ALGO = 312
       };
     };
 
@@ -579,19 +611,6 @@ namespace yy {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
-      basic_symbol (typename Base::kind_type t, int&& v, location_type&& l)
-        : Base (t)
-        , value (std::move (v))
-        , location (std::move (l))
-      {}
-#else
-      basic_symbol (typename Base::kind_type t, const int& v, const location_type& l)
-        : Base (t)
-        , value (v)
-        , location (l)
-      {}
-#endif
-#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -627,10 +646,6 @@ namespace yy {
         // Type destructor.
 switch (yytype)
     {
-      case 45: // "number"
-        value.template destroy< int > ();
-        break;
-
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -640,41 +655,68 @@ switch (yytype)
       case 13: // RBRA
       case 14: // LIDX
       case 15: // RIDX
-      case 16: // LIDX2
-      case 17: // RIDX2
-      case 18: // DOLLAR
-      case 19: // COMMA
-      case 20: // SEMMI
-      case 21: // FUNCTION
-      case 22: // R6CLASS
-      case 23: // R6CLASS_PKG
-      case 24: // ACTIVE
-      case 25: // IF
-      case 26: // IFELSE
-      case 27: // ELSE
-      case 28: // LIBRARY
-      case 29: // PUBLIC
-      case 30: // PRIVATE
-      case 31: // LIST
-      case 32: // INIT
-      case 33: // DEST
-      case 34: // TRUE
-      case 35: // FALSE
-      case 36: // NULL
-      case 37: // NA
-      case 38: // ELLIPSIS
-      case 39: // "identifier"
-      case 40: // ID
-      case 41: // ID_PKG
-      case 42: // ID_INTERNAL
-      case 43: // STRING
-      case 44: // ALGO
-      case 48: // cosas
-      case 49: // cosa
-      case 50: // reserved
-      case 51: // datos
-      case 52: // signos
-      case 53: // op_assign
+      case 16: // DOLLAR
+      case 17: // COMMA
+      case 18: // SEMMI
+      case 19: // FUNCTION
+      case 20: // R6CLASS
+      case 21: // R6CLASS_PKG
+      case 22: // ACTIVE
+      case 23: // IF
+      case 24: // IFELSE
+      case 25: // ELSE
+      case 26: // LIBRARY
+      case 27: // PUBLIC
+      case 28: // PRIVATE
+      case 29: // LIST
+      case 30: // INIT
+      case 31: // DEST
+      case 32: // TRUE
+      case 33: // FALSE
+      case 34: // NULL
+      case 35: // NA
+      case 36: // ELLIPSIS
+      case 37: // EQU
+      case 38: // NEQ
+      case 39: // GTE
+      case 40: // LTE
+      case 41: // GT
+      case 42: // LT
+      case 43: // AND
+      case 44: // OR
+      case 45: // AND1
+      case 46: // OR1
+      case 47: // NEG
+      case 48: // PLUS
+      case 49: // MINUS
+      case 50: // MULT
+      case 51: // DIV
+      case 52: // ID
+      case 53: // ID_PKG
+      case 54: // ID_INTERNAL
+      case 55: // STRING
+      case 56: // NUMBER
+      case 57: // ALGO
+      case 59: // rsource
+      case 60: // declarations
+      case 61: // declaration
+      case 62: // expression
+      case 63: // conditional_expression
+      case 64: // logical_or_expression
+      case 65: // logical_and_expression
+      case 66: // inclusive_or_expression
+      case 67: // and_expression
+      case 68: // relational_expression
+      case 69: // arit_expression
+      case 70: // primary_expression
+      case 71: // library
+      case 72: // library_name
+      case 73: // library_parms
+      case 74: // identifier
+      case 75: // constant
+      case 76: // op_assign
+      case 77: // op_rel
+      case 78: // op_arit
         value.template destroy< std::string > ();
         break;
 
@@ -754,39 +796,26 @@ switch (yytype)
       symbol_type (int tok, location_type l)
         : super_type(token_type (tok), std::move (l))
       {
-        YY_ASSERT (tok == token::TOK_END || tok == token::TOK_MINUS || tok == token::TOK_PLUS || tok == token::TOK_STAR || tok == token::TOK_SLASH);
+        YY_ASSERT (tok == token::TOK_END || tok == 258 || tok == 259 || tok == 260 || tok == 261);
       }
 #else
       symbol_type (int tok, const location_type& l)
         : super_type(token_type (tok), l)
       {
-        YY_ASSERT (tok == token::TOK_END || tok == token::TOK_MINUS || tok == token::TOK_PLUS || tok == token::TOK_STAR || tok == token::TOK_SLASH);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      symbol_type (int tok, int v, location_type l)
-        : super_type(token_type (tok), std::move (v), std::move (l))
-      {
-        YY_ASSERT (tok == token::TOK_NUMBER);
-      }
-#else
-      symbol_type (int tok, const int& v, const location_type& l)
-        : super_type(token_type (tok), v, l)
-      {
-        YY_ASSERT (tok == token::TOK_NUMBER);
+        YY_ASSERT (tok == token::TOK_END || tok == 258 || tok == 259 || tok == 260 || tok == 261);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
       symbol_type (int tok, std::string v, location_type l)
         : super_type(token_type (tok), std::move (v), std::move (l))
       {
-        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_LIDX2 || tok == token::TOK_RIDX2 || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_IDENTIFIER || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_ALGO);
+        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_EQU || tok == token::TOK_NEQ || tok == token::TOK_GTE || tok == token::TOK_LTE || tok == token::TOK_GT || tok == token::TOK_LT || tok == token::TOK_AND || tok == token::TOK_OR || tok == token::TOK_AND1 || tok == token::TOK_OR1 || tok == token::TOK_NEG || tok == token::TOK_PLUS || tok == token::TOK_MINUS || tok == token::TOK_MULT || tok == token::TOK_DIV || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_NUMBER || tok == token::TOK_ALGO);
       }
 #else
       symbol_type (int tok, const std::string& v, const location_type& l)
         : super_type(token_type (tok), v, l)
       {
-        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_LIDX2 || tok == token::TOK_RIDX2 || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_IDENTIFIER || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_ALGO);
+        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_EQU || tok == token::TOK_NEQ || tok == token::TOK_GTE || tok == token::TOK_LTE || tok == token::TOK_GT || tok == token::TOK_LT || tok == token::TOK_AND || tok == token::TOK_OR || tok == token::TOK_AND1 || tok == token::TOK_OR1 || tok == token::TOK_NEG || tok == token::TOK_PLUS || tok == token::TOK_MINUS || tok == token::TOK_MULT || tok == token::TOK_DIV || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_NUMBER || tok == token::TOK_ALGO);
       }
 #endif
     };
@@ -839,66 +868,6 @@ switch (yytype)
       make_END (const location_type& l)
       {
         return symbol_type (token::TOK_END, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_MINUS (location_type l)
-      {
-        return symbol_type (token::TOK_MINUS, std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_MINUS (const location_type& l)
-      {
-        return symbol_type (token::TOK_MINUS, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_PLUS (location_type l)
-      {
-        return symbol_type (token::TOK_PLUS, std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_PLUS (const location_type& l)
-      {
-        return symbol_type (token::TOK_PLUS, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_STAR (location_type l)
-      {
-        return symbol_type (token::TOK_STAR, std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_STAR (const location_type& l)
-      {
-        return symbol_type (token::TOK_STAR, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_SLASH (location_type l)
-      {
-        return symbol_type (token::TOK_SLASH, std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_SLASH (const location_type& l)
-      {
-        return symbol_type (token::TOK_SLASH, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1034,36 +1003,6 @@ switch (yytype)
       make_RIDX (const std::string& v, const location_type& l)
       {
         return symbol_type (token::TOK_RIDX, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_LIDX2 (std::string v, location_type l)
-      {
-        return symbol_type (token::TOK_LIDX2, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_LIDX2 (const std::string& v, const location_type& l)
-      {
-        return symbol_type (token::TOK_LIDX2, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_RIDX2 (std::string v, location_type l)
-      {
-        return symbol_type (token::TOK_RIDX2, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_RIDX2 (const std::string& v, const location_type& l)
-      {
-        return symbol_type (token::TOK_RIDX2, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1384,16 +1323,226 @@ switch (yytype)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
-      make_IDENTIFIER (std::string v, location_type l)
+      make_EQU (std::string v, location_type l)
       {
-        return symbol_type (token::TOK_IDENTIFIER, std::move (v), std::move (l));
+        return symbol_type (token::TOK_EQU, std::move (v), std::move (l));
       }
 #else
       static
       symbol_type
-      make_IDENTIFIER (const std::string& v, const location_type& l)
+      make_EQU (const std::string& v, const location_type& l)
       {
-        return symbol_type (token::TOK_IDENTIFIER, v, l);
+        return symbol_type (token::TOK_EQU, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_NEQ (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_NEQ, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_NEQ (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_NEQ, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_GTE (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_GTE, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_GTE (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_GTE, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LTE (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_LTE, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_LTE (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_LTE, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_GT (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_GT, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_GT (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_GT, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_LT (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_LT, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_LT (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_LT, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_AND (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_AND, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_AND (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_AND, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_OR (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_OR, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_OR (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_OR, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_AND1 (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_AND1, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_AND1 (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_AND1, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_OR1 (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_OR1, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_OR1 (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_OR1, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_NEG (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_NEG, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_NEG (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_NEG, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_PLUS (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_PLUS, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_PLUS (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_PLUS, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_MINUS (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_MINUS, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_MINUS (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_MINUS, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_MULT (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_MULT, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_MULT (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_MULT, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_DIV (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_DIV, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_DIV (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_DIV, v, l);
       }
 #endif
 #if 201103L <= YY_CPLUSPLUS
@@ -1459,6 +1608,21 @@ switch (yytype)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
+      make_NUMBER (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_NUMBER, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_NUMBER (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_NUMBER, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
       make_ALGO (std::string v, location_type l)
       {
         return symbol_type (token::TOK_ALGO, std::move (v), std::move (l));
@@ -1469,21 +1633,6 @@ switch (yytype)
       make_ALGO (const std::string& v, const location_type& l)
       {
         return symbol_type (token::TOK_ALGO, v, l);
-      }
-#endif
-#if 201103L <= YY_CPLUSPLUS
-      static
-      symbol_type
-      make_NUMBER (int v, location_type l)
-      {
-        return symbol_type (token::TOK_NUMBER, std::move (v), std::move (l));
-      }
-#else
-      static
-      symbol_type
-      make_NUMBER (const int& v, const location_type& l)
-      {
-        return symbol_type (token::TOK_NUMBER, v, l);
       }
 #endif
 
@@ -1792,10 +1941,10 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 36,     ///< Last index in yytable_.
-      yynnts_ = 8,  ///< Number of nonterminal symbols.
-      yyfinal_ = 3, ///< Termination state number.
-      yyntokens_ = 46  ///< Number of tokens.
+      yylast_ = 53,     ///< Last index in yytable_.
+      yynnts_ = 21,  ///< Number of nonterminal symbols.
+      yyfinal_ = 23, ///< Termination state number.
+      yyntokens_ = 58  ///< Number of tokens.
     };
 
 
@@ -1843,9 +1992,10 @@ switch (yytype)
       15,    16,    17,    18,    19,    20,    21,    22,    23,    24,
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
-      45
+      45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
+      55,    56,    57
     };
-    const int user_token_number_max_ = 300;
+    const int user_token_number_max_ = 312;
 
     if (t <= 0)
       return yyeof_;
@@ -1865,10 +2015,6 @@ switch (yytype)
   {
     switch (this->type_get ())
     {
-      case 45: // "number"
-        value.move< int > (std::move (that.value));
-        break;
-
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -1878,41 +2024,68 @@ switch (yytype)
       case 13: // RBRA
       case 14: // LIDX
       case 15: // RIDX
-      case 16: // LIDX2
-      case 17: // RIDX2
-      case 18: // DOLLAR
-      case 19: // COMMA
-      case 20: // SEMMI
-      case 21: // FUNCTION
-      case 22: // R6CLASS
-      case 23: // R6CLASS_PKG
-      case 24: // ACTIVE
-      case 25: // IF
-      case 26: // IFELSE
-      case 27: // ELSE
-      case 28: // LIBRARY
-      case 29: // PUBLIC
-      case 30: // PRIVATE
-      case 31: // LIST
-      case 32: // INIT
-      case 33: // DEST
-      case 34: // TRUE
-      case 35: // FALSE
-      case 36: // NULL
-      case 37: // NA
-      case 38: // ELLIPSIS
-      case 39: // "identifier"
-      case 40: // ID
-      case 41: // ID_PKG
-      case 42: // ID_INTERNAL
-      case 43: // STRING
-      case 44: // ALGO
-      case 48: // cosas
-      case 49: // cosa
-      case 50: // reserved
-      case 51: // datos
-      case 52: // signos
-      case 53: // op_assign
+      case 16: // DOLLAR
+      case 17: // COMMA
+      case 18: // SEMMI
+      case 19: // FUNCTION
+      case 20: // R6CLASS
+      case 21: // R6CLASS_PKG
+      case 22: // ACTIVE
+      case 23: // IF
+      case 24: // IFELSE
+      case 25: // ELSE
+      case 26: // LIBRARY
+      case 27: // PUBLIC
+      case 28: // PRIVATE
+      case 29: // LIST
+      case 30: // INIT
+      case 31: // DEST
+      case 32: // TRUE
+      case 33: // FALSE
+      case 34: // NULL
+      case 35: // NA
+      case 36: // ELLIPSIS
+      case 37: // EQU
+      case 38: // NEQ
+      case 39: // GTE
+      case 40: // LTE
+      case 41: // GT
+      case 42: // LT
+      case 43: // AND
+      case 44: // OR
+      case 45: // AND1
+      case 46: // OR1
+      case 47: // NEG
+      case 48: // PLUS
+      case 49: // MINUS
+      case 50: // MULT
+      case 51: // DIV
+      case 52: // ID
+      case 53: // ID_PKG
+      case 54: // ID_INTERNAL
+      case 55: // STRING
+      case 56: // NUMBER
+      case 57: // ALGO
+      case 59: // rsource
+      case 60: // declarations
+      case 61: // declaration
+      case 62: // expression
+      case 63: // conditional_expression
+      case 64: // logical_or_expression
+      case 65: // logical_and_expression
+      case 66: // inclusive_or_expression
+      case 67: // and_expression
+      case 68: // relational_expression
+      case 69: // arit_expression
+      case 70: // primary_expression
+      case 71: // library
+      case 72: // library_name
+      case 73: // library_parms
+      case 74: // identifier
+      case 75: // constant
+      case 76: // op_assign
+      case 77: // op_rel
+      case 78: // op_arit
         value.move< std::string > (std::move (that.value));
         break;
 
@@ -1931,10 +2104,6 @@ switch (yytype)
   {
     switch (this->type_get ())
     {
-      case 45: // "number"
-        value.copy< int > (YY_MOVE (that.value));
-        break;
-
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -1944,41 +2113,68 @@ switch (yytype)
       case 13: // RBRA
       case 14: // LIDX
       case 15: // RIDX
-      case 16: // LIDX2
-      case 17: // RIDX2
-      case 18: // DOLLAR
-      case 19: // COMMA
-      case 20: // SEMMI
-      case 21: // FUNCTION
-      case 22: // R6CLASS
-      case 23: // R6CLASS_PKG
-      case 24: // ACTIVE
-      case 25: // IF
-      case 26: // IFELSE
-      case 27: // ELSE
-      case 28: // LIBRARY
-      case 29: // PUBLIC
-      case 30: // PRIVATE
-      case 31: // LIST
-      case 32: // INIT
-      case 33: // DEST
-      case 34: // TRUE
-      case 35: // FALSE
-      case 36: // NULL
-      case 37: // NA
-      case 38: // ELLIPSIS
-      case 39: // "identifier"
-      case 40: // ID
-      case 41: // ID_PKG
-      case 42: // ID_INTERNAL
-      case 43: // STRING
-      case 44: // ALGO
-      case 48: // cosas
-      case 49: // cosa
-      case 50: // reserved
-      case 51: // datos
-      case 52: // signos
-      case 53: // op_assign
+      case 16: // DOLLAR
+      case 17: // COMMA
+      case 18: // SEMMI
+      case 19: // FUNCTION
+      case 20: // R6CLASS
+      case 21: // R6CLASS_PKG
+      case 22: // ACTIVE
+      case 23: // IF
+      case 24: // IFELSE
+      case 25: // ELSE
+      case 26: // LIBRARY
+      case 27: // PUBLIC
+      case 28: // PRIVATE
+      case 29: // LIST
+      case 30: // INIT
+      case 31: // DEST
+      case 32: // TRUE
+      case 33: // FALSE
+      case 34: // NULL
+      case 35: // NA
+      case 36: // ELLIPSIS
+      case 37: // EQU
+      case 38: // NEQ
+      case 39: // GTE
+      case 40: // LTE
+      case 41: // GT
+      case 42: // LT
+      case 43: // AND
+      case 44: // OR
+      case 45: // AND1
+      case 46: // OR1
+      case 47: // NEG
+      case 48: // PLUS
+      case 49: // MINUS
+      case 50: // MULT
+      case 51: // DIV
+      case 52: // ID
+      case 53: // ID_PKG
+      case 54: // ID_INTERNAL
+      case 55: // STRING
+      case 56: // NUMBER
+      case 57: // ALGO
+      case 59: // rsource
+      case 60: // declarations
+      case 61: // declaration
+      case 62: // expression
+      case 63: // conditional_expression
+      case 64: // logical_or_expression
+      case 65: // logical_and_expression
+      case 66: // inclusive_or_expression
+      case 67: // and_expression
+      case 68: // relational_expression
+      case 69: // arit_expression
+      case 70: // primary_expression
+      case 71: // library
+      case 72: // library_name
+      case 73: // library_parms
+      case 74: // identifier
+      case 75: // constant
+      case 76: // op_assign
+      case 77: // op_rel
+      case 78: // op_arit
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
@@ -2004,10 +2200,6 @@ switch (yytype)
     super_type::move (s);
     switch (this->type_get ())
     {
-      case 45: // "number"
-        value.move< int > (YY_MOVE (s.value));
-        break;
-
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -2017,41 +2209,68 @@ switch (yytype)
       case 13: // RBRA
       case 14: // LIDX
       case 15: // RIDX
-      case 16: // LIDX2
-      case 17: // RIDX2
-      case 18: // DOLLAR
-      case 19: // COMMA
-      case 20: // SEMMI
-      case 21: // FUNCTION
-      case 22: // R6CLASS
-      case 23: // R6CLASS_PKG
-      case 24: // ACTIVE
-      case 25: // IF
-      case 26: // IFELSE
-      case 27: // ELSE
-      case 28: // LIBRARY
-      case 29: // PUBLIC
-      case 30: // PRIVATE
-      case 31: // LIST
-      case 32: // INIT
-      case 33: // DEST
-      case 34: // TRUE
-      case 35: // FALSE
-      case 36: // NULL
-      case 37: // NA
-      case 38: // ELLIPSIS
-      case 39: // "identifier"
-      case 40: // ID
-      case 41: // ID_PKG
-      case 42: // ID_INTERNAL
-      case 43: // STRING
-      case 44: // ALGO
-      case 48: // cosas
-      case 49: // cosa
-      case 50: // reserved
-      case 51: // datos
-      case 52: // signos
-      case 53: // op_assign
+      case 16: // DOLLAR
+      case 17: // COMMA
+      case 18: // SEMMI
+      case 19: // FUNCTION
+      case 20: // R6CLASS
+      case 21: // R6CLASS_PKG
+      case 22: // ACTIVE
+      case 23: // IF
+      case 24: // IFELSE
+      case 25: // ELSE
+      case 26: // LIBRARY
+      case 27: // PUBLIC
+      case 28: // PRIVATE
+      case 29: // LIST
+      case 30: // INIT
+      case 31: // DEST
+      case 32: // TRUE
+      case 33: // FALSE
+      case 34: // NULL
+      case 35: // NA
+      case 36: // ELLIPSIS
+      case 37: // EQU
+      case 38: // NEQ
+      case 39: // GTE
+      case 40: // LTE
+      case 41: // GT
+      case 42: // LT
+      case 43: // AND
+      case 44: // OR
+      case 45: // AND1
+      case 46: // OR1
+      case 47: // NEG
+      case 48: // PLUS
+      case 49: // MINUS
+      case 50: // MULT
+      case 51: // DIV
+      case 52: // ID
+      case 53: // ID_PKG
+      case 54: // ID_INTERNAL
+      case 55: // STRING
+      case 56: // NUMBER
+      case 57: // ALGO
+      case 59: // rsource
+      case 60: // declarations
+      case 61: // declaration
+      case 62: // expression
+      case 63: // conditional_expression
+      case 64: // logical_or_expression
+      case 65: // logical_and_expression
+      case 66: // inclusive_or_expression
+      case 67: // and_expression
+      case 68: // relational_expression
+      case 69: // arit_expression
+      case 70: // primary_expression
+      case 71: // library
+      case 72: // library_name
+      case 73: // library_parms
+      case 74: // identifier
+      case 75: // constant
+      case 76: // op_assign
+      case 77: // op_rel
+      case 78: // op_arit
         value.move< std::string > (YY_MOVE (s.value));
         break;
 

@@ -27,9 +27,11 @@ class Unit {
 	  map<std::string,int> chars;
 	  unsigned int tokens = 0;
 	  set<string> libraries; // Imports
+	  set<string> raros; // Imports
 	  vector<string> refs;       // Packages referenced as pkg::method
 	  void add(Definition *object);
 	  void addLibrary(string library);
+	  void raro(string txt);
   private:
 	  map<string, R6 *> r6;
 	  map<string, Function *> functions;

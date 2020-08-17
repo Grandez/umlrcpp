@@ -17,8 +17,8 @@ static yy::location loc;
 %option stack
 %x COMMENT QUOTE
 
-id    [a-zA-Z_\.][a-zA-Z_\.0-9]*
-int   [0-9]+
+id     [a-zA-Z_\.][a-zA-Z_\.0-9]*
+number [0-9]+
 blank [ \t]
 R6    "R6Class"
 
@@ -39,8 +39,8 @@ R6    "R6Class"
 <<EOF>>    { return yy::umlrParser::make_END(loc); } 
 {blank}+   { loc.step ();                     }
 [\n]+      { loc.lines (yyleng); loc.step (); }
-"#"        { std::cout << "JGG Inicio comentario\n"; BEGIN(COMMENT); }
-\"         { std::cout << "JGG Inicio cadena\n"; BEGIN(QUOTE);   }
+"#"        { BEGIN(COMMENT); }
+\"         { BEGIN(QUOTE);   }
 
 "library"     { return yy::umlrParser::make_LIBRARY(yytext, loc);   }
 "function"    { return yy::umlrParser::make_FUNCTION(yytext, loc);  }
@@ -65,8 +65,14 @@ R6    "R6Class"
 "..."      { return yy::umlrParser::make_ELLIPSIS(yytext, loc);  }
 "<<-"      { return yy::umlrParser::make_ASSIGNG(yytext, loc);  } 
 "<-"       { return yy::umlrParser::make_ASSIGN(yytext, loc);   }
-"[["       { return yy::umlrParser::make_LIDX2(yytext, loc);    }
-"]]"       { return yy::umlrParser::make_RIDX2(yytext, loc);    }
+"||"       { return yy::umlrParser::make_OR(yytext, loc);       }
+"&&"       { return yy::umlrParser::make_AND(yytext, loc);      }
+"=="       { return yy::umlrParser::make_EQU(yytext, loc);      }
+">="       { return yy::umlrParser::make_GTE(yytext, loc);      }
+"<="       { return yy::umlrParser::make_LTE(yytext, loc);      }
+"!="       { return yy::umlrParser::make_NEQ(yytext, loc);      } 
+">"        { return yy::umlrParser::make_GT(yytext, loc);       }
+"<"        { return yy::umlrParser::make_LT(yytext, loc);       }
 "="        { return yy::umlrParser::make_ASSIGN(yytext, loc);   }
 "("        { return yy::umlrParser::make_LPAR(yytext, loc);     }
 ")"        { return yy::umlrParser::make_RPAR(yytext, loc);     }
@@ -77,7 +83,15 @@ R6    "R6Class"
 "$"        { return yy::umlrParser::make_DOLLAR(yytext, loc);   }
 ","        { return yy::umlrParser::make_COMMA(yytext, loc);    }
 ";"        { return yy::umlrParser::make_SEMMI(yytext, loc);    }
+"+"        { return yy::umlrParser::make_PLUS(yytext, loc);     }
+"-"        { return yy::umlrParser::make_MINUS(yytext, loc);    }
+"*"        { return yy::umlrParser::make_MULT(yytext, loc);     }
+"/"        { return yy::umlrParser::make_DIV(yytext, loc);      }
+"&"        { return yy::umlrParser::make_AND1(yytext, loc);     }
+"|"        { return yy::umlrParser::make_OR1(yytext, loc);      }
+"!"        { return yy::umlrParser::make_NEG(yytext, loc);      }
 
+{number}    { return yy::umlrParser::make_NUMBER(yytext, loc);    }
 {id}:::{id} { return yy::umlrParser::make_ID_INTERNAL(yytext, loc);       }
 {id}::{R6}  { return yy::umlrParser::make_R6CLASS_PKG(yytext, loc);  }
 {id}::{id}  { return yy::umlrParser::make_ID_PKG(yytext, loc);       }
@@ -88,7 +102,7 @@ R6    "R6Class"
 
 
 <COMMENT>{
-  \n        { BEGIN(INITIAL);  std::cout << "JGG Comment\n"; }
+  \n        { BEGIN(INITIAL);  }
   {blank}+  {                      }
   [.]+      { /* Eat */ }
 }

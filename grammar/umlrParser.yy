@@ -1,4 +1,4 @@
-%skeleton "lalr1.cc" /* -*- C++ -*- */
+%skeleton "lalr1.cc" /* _*_ C++ _*_ */
 %require "3.0.4"
 %defines
 %define api.parser.class {umlrParser}
@@ -24,9 +24,12 @@
   unitp = &driver.unit;
 };
 
-%define parse.trace
+// %define parse.trace
 %define parse.error verbose
 %define api.token.prefix {TOK_}
+
+%left "+" "_";
+%left "*" "/";
 
 %code {
    #include "umlrDriver.hh"
@@ -37,13 +40,7 @@
 }
 
 
-%token
-  END  0  "end of file"
-  MINUS   "-"
-  PLUS    "+"
-  STAR    "*"
-  SLASH   "/"
-;
+%token END  0  "end of file" ;
 
 // Reserved
 %token <std::string> INHERIT
@@ -56,8 +53,6 @@
 %token <std::string> RBRA
 %token <std::string> LIDX
 %token <std::string> RIDX
-%token <std::string> LIDX2
-%token <std::string> RIDX2
 %token <std::string> DOLLAR
 %token <std::string> COMMA
 %token <std::string> SEMMI
@@ -81,191 +76,192 @@
 %token <std::string> NA
 %token <std::string> ELLIPSIS
 
-%token <std::string> IDENTIFIER "identifier"
+%token <std::string> EQU
+%token <std::string> NEQ
+%token <std::string> GTE
+%token <std::string> LTE
+%token <std::string> GT
+%token <std::string> LT
+%token <std::string> AND
+%token <std::string> OR
+%token <std::string> AND1
+%token <std::string> OR1
+%token <std::string> NEG
+
+%token <std::string> PLUS
+%token <std::string> MINUS
+%token <std::string> MULT
+%token <std::string> DIV
+
 %token <std::string> ID
 %token <std::string> ID_PKG
 %token <std::string> ID_INTERNAL
 %token <std::string> STRING
+%token <std::string> NUMBER
 %token <std::string> ALGO
 
-%token <int> NUMBER "number"
 
-%type <std::string>     imports
-%type <std::string>     def_name 
+///////////////////////////////////////////////
+/// Types
+///////////////////////////////////////////////
 
-%type <rcomp::Definition> def_type
-%type <rcomp::Definition> definition
-%type <rcomp::R6>         type_r6
-%type <rcomp::Function>   type_function
+%type <std::string> rsource
+%type <std::string> declarations
+%type <std::string> declaration
 
-// FUNCTION
+// DECLARATIONS
+%type <std::string> parameters_def
+%type <std::string> parameters_opt
+%type <std::string> parameters_list
+%type <std::string> parameters_list_list
+%type <std::string> parameters
+%type <std::string> parameter
+%type <std::string> expression
+%type <std::string> conditional_expression
+%type <std::string> primary_expression
+%type <std::string> logical_or_expression
+%type <std::string> logical_and_expression
+%type <std::string> inclusive_or_expression
+%type <std::string> and_expression
+%type <std::string> relational_expression
+%type <std::string> arit_expression
 
-%type <std::string> function_def
-%type <std::string> func_signature;
+// LIBRARY
+%type <std::string> library
+%type <std::string> library_name
+%type <std::string> library_parms
 
+%type <std::string> op_arit
+%type <std::string> op_rel
 %type <std::string> op_assign
-          
-%type <std::string> cosas
-%type <std::string> cosa
-%type <std::string> reserved
-%type <std::string> datos
 
-
-
-// R6
-
-%type <rcomp::R6> R6_def
-%type <std::string> R6_parts
-%type <std::string> R6_generator
-%type <std::string> R6_parent
-%type <std::string> R6_scope
-%type <std::string> R6_scope_type
-%type <std::string> R6_public
-%type <std::string> R6_private
-%type <std::string> R6_active
-
-%type <std::string> signos
-%type <std::string> comma_opt
-
-%printer { yyoutput << $$; } <*>;
-
-%left "+" "-";
-%left "*" "/";
+%type <std::string> identifier
+%type <std::string> constant
 
 %%
 
 %start rsource;
 
-rsource: cosas { cout << "Acabado\n"; } // { driver.result = $1; }
-     ;
-     
-cosas: %empty                 { cout << "Vacio\n"; }
-     | cosas cosa             { unitp->tokens++;;   }
-     ;
+// Un fichero fuente es un conjunto de declaraciones o nada
+rsource: declarations
+       | %empty                 { cout << "Vacio\n"; }
+       ;
 
-/**
-cosa: imports
-    | definition   { } // unitp->add($1); } 
-    ;
-    
-imports: LIBRARY LPAR ID RPAR { unitp.addLibrary($3); }
+// Las declaraciones son cada uno de los tipos de sentencias
 
-definition: def_name op_assign def_type { $3->name = $1; $$ = $3; }
+declarations: declaration
+            | declarations declaration
+            ;
+
+declaration: library
+           | expression
+           ;
+           
+
+expression: conditional_expression
+          | primary_expression op_assign expression
+          ;
+         
+conditional_expression: logical_or_expression
+                      ;
+
+logical_or_expression: logical_and_expression
+                     | logical_or_expression OR logical_and_expression
+                     ;
+                     
+logical_and_expression: inclusive_or_expression
+                      | logical_and_expression AND inclusive_or_expression
+                      ;
+
+inclusive_or_expression: and_expression
+                       | inclusive_or_expression OR1 and_expression
+                       ;
+
+and_expression: relational_expression
+              | and_expression AND1 relational_expression
+              ;
+
+relational_expression: arit_expression
+                     | relational_expression op_rel arit_expression
+                     ;
+
+arit_expression: primary_expression
+               | arit_expression op_arit primary_expression
+               ;      
+
+primary_expression: identifier
+                  | constant
+                  | LPAR expression RPAR
+                  ;
+                  
+parameters_opt: parameters_def
+              | %empty           {}
+              ;
+
+parameters_def: LPAR parameters_list      RPAR
+              | LIDX parameters_list_list RIDX
+        
+parameters_list: parameters
+               | %empty            {}
+               ;
+
+parameters_list_list: LIDX parameters_list RIDX
+                    | parameters_list
+                    ;
+
+parameters: parameter
+          | parameters COMMA parameter
           ;
           
-def_name: expr
-        ;
+parameter: expression
+         ;
+         
+////////////////////////////////////////////////////
+// LIBRARY
+////////////////////////////////////////////////////
 
-def_type: type_r6
-        | type_function       
-        ;
-
-type_r6: R6CLASS { R6Pend = new R6(); } R6_def { $$ = R6Pend; }
+library: LIBRARY LPAR library_name library_parms RPAR { unitp->addLibrary($3); } ;
        ;
-        
-type_function: FUNCTION { funcPend = new Function(); } function_def { $$ = funcPend; }
-             ;
-          
-// FUNCTION
 
-function_def: func_signature  {}
+library_name: ID      { $$ = $1; }
+            | STRING  { $$ = $1; }
             ;
-            
-func_signature: LPAR RPAR     {}
-              ;            
-// R6
-       
-R6_def: LPAR R6_parts RPAR  {}
-      ;
-      
-R6_parts: R6_generator { R6Pend->generator = $1; } 
-          R6_parent    { R6Pend->parent    = $1; }
-          R6_scope
+                   
+library_parms: %empty         {}
+            ;
+
+////////////////////////////////////////////////////
+// 
+////////////////////////////////////////////////////
+
+identifier: ID
+          ;
+          
+constant: STRING
+        | NUMBER
         ;
 
-R6_generator: STRING { $$ = $1 } ;
-R6_parent:    comma_opt INHERIT ASSIGN ID { $$ = $3 } ;
-                    
-R6_scope: R6_scope_type
-        | R6_scope  R6_scope_type
-        | %empty   { $$ = ""; }
-        ;
-
-R6_scope_type: R6_public
-             | R6_private
-             | R6_active
-             ;
-             
-R6_public: comma_opt PUBLIC ASSIGN
-         ;
-                              
-R6_private: comma_opt PRIVATE ASSIGN
-         ;
-         
-R6_active: comma_opt ACTIVE ASSIGN
-         ;
-
-*/
-/////////////////////////////////////////////////////////////////////
-                                                   
-cosa: reserved
-    | datos
-    | signos
-    | ALGO  { } // unitp->add($1); }
-    ;
-
-
-reserved: FUNCTION     { $$ = $1; cout << "Function\n"; unitp->tokens++; }
-        | R6CLASS      { $$ = $1; cout << "Clase\n";    }
-        | R6CLASS_PKG  { $$ = $1; cout << "Clase\n";    }     
-    |    IF
-    | IFELSE
-    | ELSE
-    | LIBRARY
-    | PUBLIC
-    | PRIVATE
-    | ACTIVE
-    | LIST
-    | INIT
-    | DEST
-    | TRUE
-    | FALSE
-    | NULL
-    | NA
-    | ELLIPSIS
- ;
-
-datos: ID          { $$ = $1; cout << "Id: " << $1 << "\n"; }
-     | ID_PKG      { $$ = $1; cout << "Id: " << $1 << "\n"; }
-     | ID_INTERNAL { $$ = $1; cout << "Id: " << $1 << "\n"; }
-     | STRING     { $$ = $1; cout << "Cadena\n"; }
-     ;
-         
-signos: op_assign
-    | LPAR
-    | RPAR
-    | LBRA
-    | RBRA
-    | LIDX
-    | RIDX
-    | LIDX2
-    | RIDX2
-    | DOLLAR
-    | COMMA
-    | SEMMI
-
-    ;
-         
 op_assign: ASSIGN
          | ASSIGNG
          ;
          
-
-comma_opt: COMMA
-         | %empty { $$ = ""; }
-         ;
+op_rel: EQU
+      | NEQ
+      | GTE
+      | LTE
+      | GT
+      | LT
+      ;
+      
+op_arit: PLUS
+       | MINUS
+       | MULT
+       | DIV
+       ;
           
 %%
+
 void yy::umlrParser::error (const location_type& l, const std::string& m) {
   driver.error (l, m);
 }
+
