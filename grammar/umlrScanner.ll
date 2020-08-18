@@ -3,14 +3,20 @@
 # include <climits>
 # include <cstdlib>
 # include <string>
+# include <sstream>
 # include "umlrDriver.hh"
 # include "umlrParser.hpp"
+
+using namespace std;
 
 # undef yywrap
 # define yywrap() 1
 
 // The location of the current token.
 static yy::location loc;
+
+stringstream cad;
+
 %}
 
 %option noyywrap nounput batch noinput
@@ -40,7 +46,7 @@ R6    "R6Class"
 {blank}+   { loc.step ();                     }
 [\n]+      { loc.lines (yyleng); loc.step (); }
 "#"        { BEGIN(COMMENT); }
-\"         { BEGIN(QUOTE);   }
+\"         { BEGIN(QUOTE);  cad.str(); cad << "\""; }
 
 "library"     { return yy::umlrParser::make_LIBRARY(yytext, loc);   }
 "function"    { return yy::umlrParser::make_FUNCTION(yytext, loc);  }
@@ -90,6 +96,7 @@ R6    "R6Class"
 "&"        { return yy::umlrParser::make_AND1(yytext, loc);     }
 "|"        { return yy::umlrParser::make_OR1(yytext, loc);      }
 "!"        { return yy::umlrParser::make_NEG(yytext, loc);      }
+";"        { return yy::umlrParser::make_SEMICOLON(yytext, loc);      }
 
 {number}    { return yy::umlrParser::make_NUMBER(yytext, loc);    }
 {id}:::{id} { return yy::umlrParser::make_ID_INTERNAL(yytext, loc);       }
@@ -108,8 +115,8 @@ R6    "R6Class"
 }
 
 <QUOTE>{
-  \"        { BEGIN(INITIAL); return yy::umlrParser::make_STRING(yytext, loc); }
-  [.]+      { /* Eat */ }
+  \"        { BEGIN(INITIAL); cad << "\""; return yy::umlrParser::make_STRING(cad.str(), loc); }
+  [^\"]+    { cad << yytext; }
 }
 
 %%

@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 #include "umlrParser.hpp"
-#include "Unit.h"
+#include "Unit.hpp"
 #include "umlr.h"
 
 # define YY_DECL yy::umlrParser::symbol_type yylex (umlrDriver& driver)

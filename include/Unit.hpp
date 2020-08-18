@@ -5,16 +5,16 @@
  *      Author: Javier
  */
 
-#ifndef UNIT_H_
-#define UNIT_H_
+#ifndef UNIT_HPP_
+#define UNIT_HPP_
 
 #include <string>
 #include <map>
 #include <vector>
 #include <set>
+#include <list>
 
 #include "umlr.h"
-#include "R6.h"
 
 namespace rcomp {
 using namespace std;
@@ -29,17 +29,20 @@ class Unit {
 	  set<string> libraries; // Imports
 	  set<string> raros; // Imports
 	  vector<string> refs;       // Packages referenced as pkg::method
-	  void add(Definition *object);
-	  void addLibrary(string library);
-	  void raro(string txt);
+	  Unit *add(Definition *object);
+	  Unit *addLibrary(string library);
+	  Unit *raro(string txt);
+	  vector<string>     getFunctionsName();
+	  list<Function *> getFunctions();
   private:
-	  map<string, R6 *> r6;
-	  map<string, Function *> functions;
-	  template<typename Base, typename T>
-	  inline bool instanceof(const T*) { return is_base_of<Base, T>::value; }
+	  list<R6 *> r6;
+	  list<Function *> functions;
+//	  template<typename Base, typename T>
+//	  bool instanceof(const T*) {
+//		  cout << "instanceof " <<
+//		  return is_base_of<Base, T>::value;
+//	  }
 	  int    lines = 0;
-	    std::set<std::string> setOfNumbers;
-
 };
 
 } /* namespace rcomp */

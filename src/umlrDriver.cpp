@@ -20,11 +20,10 @@ int umlrDriver::parse (const std::string &f) {
   yy::umlrParser parser (*this);
   std::cout << "Parser creado para " << file << std::endl << std::flush;
   parser.set_debug_level (trace_parsing);
-  int res = parser.parse ();
+  result = parser.parse ();
   scan_end ();
-  cout << "PARSER ACABADO CON " << res << endl;
 
-  return res;
+  return result;
 }
 
 void umlrDriver::entra(string txt) {

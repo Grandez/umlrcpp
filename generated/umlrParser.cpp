@@ -47,6 +47,7 @@
    rcomp::Unit *unitp = NULL;
    rcomp::R6 *R6Pend; 
    Function *funcPend;
+   Definition *obj;
 
 
 
@@ -247,6 +248,21 @@ namespace yy {
   {
     switch (that.type_get ())
     {
+      case 63: // function_definition
+        value.YY_MOVE_OR_COPY< rcomp::Function * > (YY_MOVE (that.value));
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.YY_MOVE_OR_COPY< rcomp::Parameter * > (YY_MOVE (that.value));
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.YY_MOVE_OR_COPY< std::list<Parameter *> > (YY_MOVE (that.value));
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -292,32 +308,41 @@ namespace yy {
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.YY_MOVE_OR_COPY< std::string > (YY_MOVE (that.value));
         break;
 
@@ -336,6 +361,21 @@ namespace yy {
   {
     switch (that.type_get ())
     {
+      case 63: // function_definition
+        value.move< rcomp::Function * > (YY_MOVE (that.value));
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.move< rcomp::Parameter * > (YY_MOVE (that.value));
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.move< std::list<Parameter *> > (YY_MOVE (that.value));
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -381,32 +421,41 @@ namespace yy {
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.move< std::string > (YY_MOVE (that.value));
         break;
 
@@ -425,6 +474,21 @@ namespace yy {
     state = that.state;
     switch (that.type_get ())
     {
+      case 63: // function_definition
+        value.copy< rcomp::Function * > (that.value);
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.copy< rcomp::Parameter * > (that.value);
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.copy< std::list<Parameter *> > (that.value);
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -470,32 +534,41 @@ namespace yy {
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.copy< std::string > (that.value);
         break;
 
@@ -513,6 +586,21 @@ namespace yy {
     state = that.state;
     switch (that.type_get ())
     {
+      case 63: // function_definition
+        value.move< rcomp::Function * > (that.value);
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.move< rcomp::Parameter * > (that.value);
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.move< std::list<Parameter *> > (that.value);
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -558,32 +646,41 @@ namespace yy {
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.move< std::string > (that.value);
         break;
 
@@ -740,7 +837,7 @@ namespace yy {
 {
   // Initialize the initial location.
   yyla.location.begin.filename = yyla.location.end.filename = &driver.file;
-  std::cout << "Fichero: " << driver.file << std::endl << std::flush;
+  //std::cout << "Fichero: " << driver.file << std::endl << std::flush;
   unitp = &driver.unit;
 }
 
@@ -847,6 +944,21 @@ namespace yy {
          when using variants.  */
       switch (yyr1_[yyn])
     {
+      case 63: // function_definition
+        yylhs.value.emplace< rcomp::Function * > ();
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        yylhs.value.emplace< rcomp::Parameter * > ();
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        yylhs.value.emplace< std::list<Parameter *> > ();
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -892,32 +1004,41 @@ namespace yy {
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         yylhs.value.emplace< std::string > ();
         break;
 
@@ -946,7 +1067,7 @@ namespace yy {
     break;
 
   case 3:
-                                { cout << "Vacio\n"; }
+                                {  }
     break;
 
   case 4:
@@ -962,154 +1083,256 @@ namespace yy {
     break;
 
   case 7:
-             { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                                 { unitp->add(obj); }
     break;
 
   case 8:
-            { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                                                                             { obj->setName(yystack_[4].value.as < std::string > ()); 
+                                                                               obj->addParameters(yystack_[1].value.as < std::list<Parameter *> > ()); 
+                                                                             }
     break;
 
   case 9:
-            { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+                                                { yylhs.value.as < std::list<Parameter *> > () = yystack_[1].value.as < std::list<Parameter *> > (); }
     break;
 
   case 10:
-                        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                 { yylhs.value.as < std::list<Parameter *> > () = yystack_[0].value.as < std::list<Parameter *> > (); }
     break;
 
   case 11:
-                       { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                                    {}
     break;
 
   case 12:
-                       { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+                                                  { yylhs.value.as < std::list<Parameter *> > ().push_back(yystack_[0].value.as < rcomp::Parameter * > ()); }
     break;
 
   case 13:
-                        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                                                  { yystack_[2].value.as < std::list<Parameter *> > ().push_back(yystack_[0].value.as < rcomp::Parameter * > ()); }
     break;
 
   case 14:
-                        { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+                                             { yylhs.value.as < rcomp::Parameter * > () = yystack_[0].value.as < rcomp::Parameter * > (); }
     break;
 
   case 15:
-                         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                                             { yylhs.value.as < rcomp::Parameter * > () = yystack_[2].value.as < rcomp::Parameter * > ()->addValue(yystack_[0].value.as < std::string > ()); }
     break;
 
   case 16:
-                         { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+                            { yylhs.value.as < rcomp::Parameter * > () = new Parameter(yystack_[0].value.as < std::string > ()); }
     break;
 
   case 17:
-                { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                            { yylhs.value.as < rcomp::Parameter * > () = new Parameter(yystack_[0].value.as < std::string > ()); }
     break;
 
   case 18:
-                { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
-    break;
-
-  case 19:
-                       { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
-    break;
-
-  case 20:
-                       { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
-    break;
-
-  case 21:
                  { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
-  case 22:
+  case 19:
+               { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 20:
+               { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 21:
                  { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
     break;
 
+  case 22:
+                 { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
   case 23:
-                    { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                                {}
     break;
 
   case 24:
-                    { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
-    break;
-
-  case 25:
-                    { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
-    break;
-
-  case 26:
-                                                      { unitp->addLibrary(yystack_[2].value.as < std::string > ()); }
-    break;
-
-  case 27:
-                      { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
-    break;
-
-  case 28:
-                      { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
-    break;
-
-  case 29:
-                              {}
-    break;
-
-  case 30:
             { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
+  case 25:
+            { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+    break;
+
+  case 26:
+                     { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 27:
+                                    {}
+    break;
+
+  case 28:
+           { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 29:
+            { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 30:
+            { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+    break;
+
   case 31:
-          { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                     { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 32:
-          { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                     { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 33:
-           { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                     { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 34:
-           { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 35:
-        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                       { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 36:
-        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                       { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
     break;
 
   case 37:
-        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 38:
-        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                        { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
     break;
 
   case 39:
-        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 40:
-        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                         { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
     break;
 
   case 41:
-         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 42:
-         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
     break;
 
   case 43:
-         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+                       { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
   case 44:
+                       { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+    break;
+
+  case 45:
+                 { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 46:
+                 { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+    break;
+
+  case 47:
+                    { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 48:
+                    { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 49:
+                    { yylhs.value.as < std::string > () = yystack_[2].value.as < std::string > (); }
+    break;
+
+  case 50:
+                                                      { unitp->addLibrary(yystack_[2].value.as < std::string > ()); }
+    break;
+
+  case 51:
+                      { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 52:
+                      { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 53:
+                              {}
+    break;
+
+  case 54:
+                    { obj = new Function(); }
+    break;
+
+  case 55:
+            { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 56:
+          { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 57:
+          { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 58:
+           { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 59:
+           { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 60:
+        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 61:
+        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 62:
+        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 63:
+        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 64:
+        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 65:
+        { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 66:
+         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 67:
+         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 68:
+         { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
+    break;
+
+  case 69:
          { yylhs.value.as < std::string > () = yystack_[0].value.as < std::string > (); }
     break;
 
@@ -1384,99 +1607,121 @@ namespace yy {
   }
 
 
-  const signed char umlrParser::yypact_ninf_ = -37;
+  const signed char umlrParser::yypact_ninf_ = -43;
 
-  const signed char umlrParser::yytable_ninf_ = -1;
+  const signed char umlrParser::yytable_ninf_ = -23;
 
   const signed char
   umlrParser::yypact_[] =
   {
-     -10,    -8,    -1,   -37,   -37,   -37,    18,   -10,   -37,   -37,
-     -37,   -21,   -19,   -20,   -18,   -34,   -36,    12,   -37,   -37,
-     -37,    14,   -33,   -37,   -37,    -8,    -8,    -8,    -8,   -37,
-     -37,   -37,   -37,   -37,   -37,    -8,   -37,   -37,   -37,   -37,
-      -8,   -37,   -37,    -8,   -37,   -37,   -37,   -37,   -19,   -37,
-     -20,   -18,   -34,   -36,   -37,   -37,    17,   -37
+     -20,     1,    18,    22,   -20,   -43,   -43,   -43,   -32,   -43,
+     -43,    12,   -43,   -43,   -43,   -43,   -43,   -43,    24,    30,
+     -28,    -8,   -43,   -43,   -43,    33,    38,    48,   -43,   -43,
+      -3,    -3,   -43,   -43,   -43,   -43,   -43,   -43,   -43,    13,
+      15,    14,    16,    -2,   -31,    18,   -43,   -43,   -43,   -28,
+     -27,    51,    46,    -1,   -43,    -3,    -3,    -3,    -3,   -43,
+     -43,   -43,   -43,   -43,   -43,    -3,   -43,   -43,   -43,   -43,
+      -3,   -10,    48,   -43,   -43,   -43,   -43,   -43,    -3,    15,
+     -43,    14,    16,    -2,   -31,   -43,   -43,   -43,   -43,   -43,
+     -43
   };
 
   const signed char
   umlrParser::yydefact_[] =
   {
-       3,     0,     0,    30,    31,    32,     0,     2,     4,     7,
-       8,    10,    11,    13,    15,    17,    19,    21,     6,    23,
-      24,     0,     0,     1,     5,     0,     0,     0,     0,    35,
-      36,    37,    38,    39,    40,     0,    41,    42,    43,    44,
-       0,    33,    34,     0,    25,    27,    28,    29,    12,    21,
-      14,    16,    18,    20,    22,     9,     0,    26
+       3,     0,     0,     0,     2,     4,     7,     6,     0,    58,
+      59,     0,     1,     5,    51,    52,    53,    54,     0,     0,
+      11,     0,    50,    17,    55,     0,    10,    12,    14,    16,
+       0,    23,    56,    57,     8,    19,    20,    28,    29,    34,
+      35,    37,    39,    41,    43,    45,    47,    48,     9,     0,
+       0,     0,     0,    27,    24,     0,     0,     0,     0,    60,
+      61,    62,    63,    64,    65,     0,    66,    67,    68,    69,
+       0,     0,    13,    15,    18,    49,    21,    26,     0,    36,
+      45,    38,    40,    42,    44,    46,    31,    32,    33,    30,
+      25
   };
 
   const signed char
   umlrParser::yypgoto_[] =
   {
-     -37,   -37,   -37,    22,     0,   -37,   -37,     5,     6,     4,
-       7,    -2,    10,   -37,   -37,   -37,   -37,   -37,   -37,   -37,
-     -37
+     -43,   -43,   -43,    59,   -43,   -43,   -43,   -43,    17,   -43,
+     -43,   -43,   -43,   -43,   -43,   -43,   -26,   -29,   -43,   -43,
+     -43,     9,    11,     8,    10,     4,   -42,   -43,   -43,   -43,
+     -43,   -17,    20,    26,   -43,   -43
   };
 
   const signed char
   umlrParser::yydefgoto_[] =
   {
-      -1,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    49,    18,    47,    56,    19,    20,    43,    35,
-      40
+      -1,     3,     4,     5,     6,    21,    25,    26,    27,    28,
+      73,    34,    35,    52,    53,    78,    36,    37,    89,    38,
+      39,    40,    41,    42,    43,    44,    45,     7,    16,    19,
+      18,    46,    47,    11,    65,    70
   };
 
   const signed char
   umlrParser::yytable_[] =
   {
-       1,    21,     1,    29,    30,    31,    32,    33,    34,    22,
-      17,    17,    36,    37,    38,    39,     2,    17,    23,    45,
-      41,    42,    46,    25,    26,    44,    27,    28,    57,    24,
-      48,    51,    50,    53,     0,    52,     0,     0,     0,     0,
-       0,     0,     3,    55,     3,     4,     5,     4,     5,     0,
-      54,     0,     0,    17
+      30,    51,    30,    29,    31,    54,     1,    30,    23,    86,
+      87,     8,   -22,    80,    80,    80,    80,    66,    67,    68,
+      69,    14,    12,    80,    15,    24,     9,    10,    85,    32,
+      33,    17,    29,     2,    20,    59,    60,    61,    62,    63,
+      64,    22,    88,    24,    48,    24,    32,    33,    32,    33,
+      24,    77,    90,    32,    33,    49,    50,    55,    56,    76,
+      57,    58,    75,    13,    79,    82,    72,    81,    83,    84,
+      74,    71
   };
 
   const signed char
   umlrParser::yycheck_[] =
   {
-      10,     1,    10,    37,    38,    39,    40,    41,    42,    10,
-       0,     1,    48,    49,    50,    51,    26,     7,     0,    52,
-       8,     9,    55,    44,    43,    11,    46,    45,    11,     7,
-      25,    27,    26,    35,    -1,    28,    -1,    -1,    -1,    -1,
-      -1,    -1,    52,    43,    52,    55,    56,    55,    56,    -1,
-      40,    -1,    -1,    43
+      10,    30,    10,    20,    12,    31,    26,    10,    36,    19,
+      20,    10,    13,    55,    56,    57,    58,    48,    49,    50,
+      51,    53,     0,    65,    56,    53,     8,     9,    70,    56,
+      57,    19,    49,    53,    10,    37,    38,    39,    40,    41,
+      42,    11,    71,    53,    11,    53,    56,    57,    56,    57,
+      53,    52,    78,    56,    57,    17,     8,    44,    43,    13,
+      46,    45,    11,     4,    55,    57,    49,    56,    58,    65,
+      50,    45
   };
 
   const signed char
   umlrParser::yystos_[] =
   {
-       0,    10,    26,    52,    55,    56,    59,    60,    61,    62,
-      63,    64,    65,    66,    67,    68,    69,    70,    71,    74,
-      75,    62,    10,     0,    61,    44,    43,    46,    45,    37,
-      38,    39,    40,    41,    42,    77,    48,    49,    50,    51,
-      78,     8,     9,    76,    11,    52,    55,    72,    65,    70,
-      66,    67,    68,    69,    70,    62,    73,    11
+       0,    26,    53,    60,    61,    62,    63,    86,    10,     8,
+       9,    92,     0,    62,    53,    56,    87,    19,    89,    88,
+      10,    64,    11,    36,    53,    65,    66,    67,    68,    90,
+      10,    12,    56,    57,    70,    71,    75,    76,    78,    79,
+      80,    81,    82,    83,    84,    85,    90,    91,    11,    17,
+       8,    76,    72,    73,    75,    44,    43,    46,    45,    37,
+      38,    39,    40,    41,    42,    93,    48,    49,    50,    51,
+      94,    92,    67,    69,    91,    11,    13,    52,    74,    80,
+      85,    81,    82,    83,    84,    85,    19,    20,    76,    77,
+      75
   };
 
   const signed char
   umlrParser::yyr1_[] =
   {
-       0,    58,    59,    59,    60,    60,    61,    61,    62,    62,
-      63,    64,    64,    65,    65,    66,    66,    67,    67,    68,
-      68,    69,    69,    70,    70,    70,    71,    72,    72,    73,
-      74,    75,    75,    76,    76,    77,    77,    77,    77,    77,
-      77,    78,    78,    78,    78
+       0,    59,    60,    60,    61,    61,    62,    62,    63,    64,
+      65,    65,    66,    66,    67,    67,    68,    68,    69,    70,
+      70,    71,    72,    72,    73,    73,    74,    74,    75,    76,
+      76,    77,    77,    77,    78,    79,    79,    80,    80,    81,
+      81,    82,    82,    83,    83,    84,    84,    85,    85,    85,
+      86,    87,    87,    88,    89,    90,    91,    91,    92,    92,
+      93,    93,    93,    93,    93,    93,    94,    94,    94,    94
   };
 
   const signed char
   umlrParser::yyr2_[] =
   {
-       0,     2,     1,     0,     1,     2,     1,     1,     1,     3,
-       1,     1,     3,     1,     3,     1,     3,     1,     3,     1,
-       3,     1,     3,     1,     1,     3,     5,     1,     1,     0,
-       1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     1,     1,     1
+       0,     2,     1,     0,     1,     2,     1,     1,     5,     3,
+       1,     0,     1,     3,     1,     3,     1,     1,     1,     1,
+       1,     3,     1,     0,     1,     3,     1,     0,     1,     1,
+       3,     1,     1,     1,     1,     1,     3,     1,     3,     1,
+       3,     1,     3,     1,     3,     1,     3,     1,     1,     3,
+       5,     1,     1,     0,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     1,     1,     1,     1,     1,     1
   };
 
 
@@ -1492,25 +1737,31 @@ namespace yy {
   "R6CLASS_PKG", "ACTIVE", "IF", "IFELSE", "ELSE", "LIBRARY", "PUBLIC",
   "PRIVATE", "LIST", "INIT", "DEST", "TRUE", "FALSE", "NULL", "NA",
   "ELLIPSIS", "EQU", "NEQ", "GTE", "LTE", "GT", "LT", "AND", "OR", "AND1",
-  "OR1", "NEG", "PLUS", "MINUS", "MULT", "DIV", "ID", "ID_PKG",
-  "ID_INTERNAL", "STRING", "NUMBER", "ALGO", "$accept", "rsource",
-  "declarations", "declaration", "expression", "conditional_expression",
+  "OR1", "NEG", "PLUS", "MINUS", "MULT", "DIV", "SEMICOLON", "ID",
+  "ID_PKG", "ID_INTERNAL", "STRING", "NUMBER", "ALGO", "$accept",
+  "rsource", "declarations", "declaration", "function_definition",
+  "function_parameters", "parameters_decl", "parameters_list", "parameter",
+  "parameter_name", "parameter_value", "function_body", "statement_block",
+  "statements_decl", "statements", "statement_separator", "statement",
+  "expression", "expression_reserved", "conditional_expression",
   "logical_or_expression", "logical_and_expression",
   "inclusive_or_expression", "and_expression", "relational_expression",
   "arit_expression", "primary_expression", "library", "library_name",
-  "library_parms", "identifier", "constant", "op_assign", "op_rel",
-  "op_arit", YY_NULLPTR
+  "library_parms", "function", "identifier", "constant", "op_assign",
+  "op_rel", "op_arit", YY_NULLPTR
   };
 
 #if YYDEBUG
   const short
   umlrParser::yyrline_[] =
   {
-       0,   146,   146,   147,   152,   153,   156,   157,   161,   162,
-     165,   168,   169,   172,   173,   176,   177,   180,   181,   184,
-     185,   188,   189,   192,   193,   194,   223,   226,   227,   230,
-     237,   240,   241,   244,   245,   248,   249,   250,   251,   252,
-     253,   256,   257,   258,   259
+       0,   165,   165,   166,   171,   172,   175,   176,   184,   189,
+     192,   193,   196,   197,   200,   201,   204,   205,   208,   211,
+     212,   219,   222,   223,   225,   226,   229,   230,   237,   240,
+     241,   244,   245,   246,   249,   252,   253,   256,   257,   260,
+     261,   264,   265,   268,   269,   272,   273,   276,   277,   278,
+     285,   288,   289,   292,   299,   301,   304,   305,   308,   309,
+     312,   313,   314,   315,   316,   317,   320,   321,   322,   323
   };
 
   // Print the state stack on the debug stream.

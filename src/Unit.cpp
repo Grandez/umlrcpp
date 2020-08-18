@@ -1,3 +1,5 @@
+#include "Unit.hpp"
+
 /*
  * Unit.cpp
  *
@@ -9,8 +11,8 @@
 #include <set>
 #include <map>
 #include <utility>
-
-#include "Unit.h"
+#include <algorithm>
+#include "Unit.hpp"
 #include "umlr.h"
 
 using namespace std;
@@ -22,21 +24,26 @@ namespace rcomp {
 
    Unit::~Unit() {}
 
-   void Unit::addLibrary(string library) {
+   Unit *Unit::addLibrary(string library) {
 	   libraries.insert(library);
+	   return this;
    }
-   void Unit::raro(string txt) {
+   Unit *Unit::raro(string txt) {
 	   raros.insert(txt);
+	   return this;
    }
 
-   void Unit::add(Definition *object) {
-
-	   pair<string,Definition *> p = pair<string,Definition *>();
-	   pair<string,R6 *>(object->name, (R6 *) object);
-	   p.first = object->name;
-	   p.second = object;
-
-	   if (instanceof<R6>(object))       r6.insert(std::make_pair(object->name, (R6 *)object));
-	   if (instanceof<Function>(object)) functions.insert(std::make_pair(object->name, (Function *)object));
+   Unit *Unit::add(Definition *object) {
+	   if (dynamic_cast<R6*>(object))       r6.push_back((R6 *) object);
+	   if (dynamic_cast<Function*>(object)) functions.push_back((Function *) object);
+	   return this;
    }
+   vector<string> Unit::getFunctionsName() {
+	   std::vector<string> names (functions.size());
+	   for (auto const& i : functions) names.push_back(i->name);
+	   return names;
+   }
+   list<Function *> Unit::getFunctions() { return functions; }
+
+
 } /* namespace rcomp */

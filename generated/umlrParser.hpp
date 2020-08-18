@@ -46,6 +46,7 @@
 // "%code requires" blocks.
 
   #include <string>
+  #include <list>
   #include "umlr.h"
   using namespace rcomp;
   class umlrDriver;
@@ -386,6 +387,18 @@ namespace yy {
     /// An auxiliary type to compute the largest semantic type.
     union union_type
     {
+      // function_definition
+      char dummy1[sizeof (rcomp::Function *)];
+
+      // parameter
+      // parameter_name
+      char dummy2[sizeof (rcomp::Parameter *)];
+
+      // function_parameters
+      // parameters_decl
+      // parameters_list
+      char dummy3[sizeof (std::list<Parameter *>)];
+
       // INHERIT
       // ASSIGN
       // ASSIGNG
@@ -431,6 +444,7 @@ namespace yy {
       // MINUS
       // MULT
       // DIV
+      // SEMICOLON
       // ID
       // ID_PKG
       // ID_INTERNAL
@@ -440,7 +454,15 @@ namespace yy {
       // rsource
       // declarations
       // declaration
+      // parameter_value
+      // function_body
+      // statement_block
+      // statements_decl
+      // statements
+      // statement_separator
+      // statement
       // expression
+      // expression_reserved
       // conditional_expression
       // logical_or_expression
       // logical_and_expression
@@ -457,7 +479,7 @@ namespace yy {
       // op_assign
       // op_rel
       // op_arit
-      char dummy1[sizeof (std::string)];
+      char dummy4[sizeof (std::string)];
     };
 
     /// The size of the largest semantic type.
@@ -551,12 +573,13 @@ namespace yy {
         TOK_MINUS = 304,
         TOK_MULT = 305,
         TOK_DIV = 306,
-        TOK_ID = 307,
-        TOK_ID_PKG = 308,
-        TOK_ID_INTERNAL = 309,
-        TOK_STRING = 310,
-        TOK_NUMBER = 311,
-        TOK_ALGO = 312
+        TOK_SEMICOLON = 307,
+        TOK_ID = 308,
+        TOK_ID_PKG = 309,
+        TOK_ID_INTERNAL = 310,
+        TOK_STRING = 311,
+        TOK_NUMBER = 312,
+        TOK_ALGO = 313
       };
     };
 
@@ -611,6 +634,45 @@ namespace yy {
       {}
 #endif
 #if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, rcomp::Function *&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const rcomp::Function *& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, rcomp::Parameter *&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const rcomp::Parameter *& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::list<Parameter *>&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::list<Parameter *>& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+#if 201103L <= YY_CPLUSPLUS
       basic_symbol (typename Base::kind_type t, std::string&& v, location_type&& l)
         : Base (t)
         , value (std::move (v))
@@ -646,6 +708,21 @@ namespace yy {
         // Type destructor.
 switch (yytype)
     {
+      case 63: // function_definition
+        value.template destroy< rcomp::Function * > ();
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.template destroy< rcomp::Parameter * > ();
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.template destroy< std::list<Parameter *> > ();
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -691,32 +768,41 @@ switch (yytype)
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.template destroy< std::string > ();
         break;
 
@@ -809,13 +895,13 @@ switch (yytype)
       symbol_type (int tok, std::string v, location_type l)
         : super_type(token_type (tok), std::move (v), std::move (l))
       {
-        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_EQU || tok == token::TOK_NEQ || tok == token::TOK_GTE || tok == token::TOK_LTE || tok == token::TOK_GT || tok == token::TOK_LT || tok == token::TOK_AND || tok == token::TOK_OR || tok == token::TOK_AND1 || tok == token::TOK_OR1 || tok == token::TOK_NEG || tok == token::TOK_PLUS || tok == token::TOK_MINUS || tok == token::TOK_MULT || tok == token::TOK_DIV || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_NUMBER || tok == token::TOK_ALGO);
+        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_EQU || tok == token::TOK_NEQ || tok == token::TOK_GTE || tok == token::TOK_LTE || tok == token::TOK_GT || tok == token::TOK_LT || tok == token::TOK_AND || tok == token::TOK_OR || tok == token::TOK_AND1 || tok == token::TOK_OR1 || tok == token::TOK_NEG || tok == token::TOK_PLUS || tok == token::TOK_MINUS || tok == token::TOK_MULT || tok == token::TOK_DIV || tok == token::TOK_SEMICOLON || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_NUMBER || tok == token::TOK_ALGO);
       }
 #else
       symbol_type (int tok, const std::string& v, const location_type& l)
         : super_type(token_type (tok), v, l)
       {
-        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_EQU || tok == token::TOK_NEQ || tok == token::TOK_GTE || tok == token::TOK_LTE || tok == token::TOK_GT || tok == token::TOK_LT || tok == token::TOK_AND || tok == token::TOK_OR || tok == token::TOK_AND1 || tok == token::TOK_OR1 || tok == token::TOK_NEG || tok == token::TOK_PLUS || tok == token::TOK_MINUS || tok == token::TOK_MULT || tok == token::TOK_DIV || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_NUMBER || tok == token::TOK_ALGO);
+        YY_ASSERT (tok == token::TOK_INHERIT || tok == token::TOK_ASSIGN || tok == token::TOK_ASSIGNG || tok == token::TOK_LPAR || tok == token::TOK_RPAR || tok == token::TOK_LBRA || tok == token::TOK_RBRA || tok == token::TOK_LIDX || tok == token::TOK_RIDX || tok == token::TOK_DOLLAR || tok == token::TOK_COMMA || tok == token::TOK_SEMMI || tok == token::TOK_FUNCTION || tok == token::TOK_R6CLASS || tok == token::TOK_R6CLASS_PKG || tok == token::TOK_ACTIVE || tok == token::TOK_IF || tok == token::TOK_IFELSE || tok == token::TOK_ELSE || tok == token::TOK_LIBRARY || tok == token::TOK_PUBLIC || tok == token::TOK_PRIVATE || tok == token::TOK_LIST || tok == token::TOK_INIT || tok == token::TOK_DEST || tok == token::TOK_TRUE || tok == token::TOK_FALSE || tok == token::TOK_NULL || tok == token::TOK_NA || tok == token::TOK_ELLIPSIS || tok == token::TOK_EQU || tok == token::TOK_NEQ || tok == token::TOK_GTE || tok == token::TOK_LTE || tok == token::TOK_GT || tok == token::TOK_LT || tok == token::TOK_AND || tok == token::TOK_OR || tok == token::TOK_AND1 || tok == token::TOK_OR1 || tok == token::TOK_NEG || tok == token::TOK_PLUS || tok == token::TOK_MINUS || tok == token::TOK_MULT || tok == token::TOK_DIV || tok == token::TOK_SEMICOLON || tok == token::TOK_ID || tok == token::TOK_ID_PKG || tok == token::TOK_ID_INTERNAL || tok == token::TOK_STRING || tok == token::TOK_NUMBER || tok == token::TOK_ALGO);
       }
 #endif
     };
@@ -1548,6 +1634,21 @@ switch (yytype)
 #if 201103L <= YY_CPLUSPLUS
       static
       symbol_type
+      make_SEMICOLON (std::string v, location_type l)
+      {
+        return symbol_type (token::TOK_SEMICOLON, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_SEMICOLON (const std::string& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_SEMICOLON, v, l);
+      }
+#endif
+#if 201103L <= YY_CPLUSPLUS
+      static
+      symbol_type
       make_ID (std::string v, location_type l)
       {
         return symbol_type (token::TOK_ID, std::move (v), std::move (l));
@@ -1941,10 +2042,10 @@ switch (yytype)
     enum
     {
       yyeof_ = 0,
-      yylast_ = 53,     ///< Last index in yytable_.
-      yynnts_ = 21,  ///< Number of nonterminal symbols.
-      yyfinal_ = 23, ///< Termination state number.
-      yyntokens_ = 58  ///< Number of tokens.
+      yylast_ = 71,     ///< Last index in yytable_.
+      yynnts_ = 36,  ///< Number of nonterminal symbols.
+      yyfinal_ = 12, ///< Termination state number.
+      yyntokens_ = 59  ///< Number of tokens.
     };
 
 
@@ -1993,9 +2094,9 @@ switch (yytype)
       25,    26,    27,    28,    29,    30,    31,    32,    33,    34,
       35,    36,    37,    38,    39,    40,    41,    42,    43,    44,
       45,    46,    47,    48,    49,    50,    51,    52,    53,    54,
-      55,    56,    57
+      55,    56,    57,    58
     };
-    const int user_token_number_max_ = 312;
+    const int user_token_number_max_ = 313;
 
     if (t <= 0)
       return yyeof_;
@@ -2015,6 +2116,21 @@ switch (yytype)
   {
     switch (this->type_get ())
     {
+      case 63: // function_definition
+        value.move< rcomp::Function * > (std::move (that.value));
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.move< rcomp::Parameter * > (std::move (that.value));
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.move< std::list<Parameter *> > (std::move (that.value));
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -2060,32 +2176,41 @@ switch (yytype)
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.move< std::string > (std::move (that.value));
         break;
 
@@ -2104,6 +2229,21 @@ switch (yytype)
   {
     switch (this->type_get ())
     {
+      case 63: // function_definition
+        value.copy< rcomp::Function * > (YY_MOVE (that.value));
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.copy< rcomp::Parameter * > (YY_MOVE (that.value));
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.copy< std::list<Parameter *> > (YY_MOVE (that.value));
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -2149,32 +2289,41 @@ switch (yytype)
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.copy< std::string > (YY_MOVE (that.value));
         break;
 
@@ -2200,6 +2349,21 @@ switch (yytype)
     super_type::move (s);
     switch (this->type_get ())
     {
+      case 63: // function_definition
+        value.move< rcomp::Function * > (YY_MOVE (s.value));
+        break;
+
+      case 67: // parameter
+      case 68: // parameter_name
+        value.move< rcomp::Parameter * > (YY_MOVE (s.value));
+        break;
+
+      case 64: // function_parameters
+      case 65: // parameters_decl
+      case 66: // parameters_list
+        value.move< std::list<Parameter *> > (YY_MOVE (s.value));
+        break;
+
       case 7: // INHERIT
       case 8: // ASSIGN
       case 9: // ASSIGNG
@@ -2245,32 +2409,41 @@ switch (yytype)
       case 49: // MINUS
       case 50: // MULT
       case 51: // DIV
-      case 52: // ID
-      case 53: // ID_PKG
-      case 54: // ID_INTERNAL
-      case 55: // STRING
-      case 56: // NUMBER
-      case 57: // ALGO
-      case 59: // rsource
-      case 60: // declarations
-      case 61: // declaration
-      case 62: // expression
-      case 63: // conditional_expression
-      case 64: // logical_or_expression
-      case 65: // logical_and_expression
-      case 66: // inclusive_or_expression
-      case 67: // and_expression
-      case 68: // relational_expression
-      case 69: // arit_expression
-      case 70: // primary_expression
-      case 71: // library
-      case 72: // library_name
-      case 73: // library_parms
-      case 74: // identifier
-      case 75: // constant
-      case 76: // op_assign
-      case 77: // op_rel
-      case 78: // op_arit
+      case 52: // SEMICOLON
+      case 53: // ID
+      case 54: // ID_PKG
+      case 55: // ID_INTERNAL
+      case 56: // STRING
+      case 57: // NUMBER
+      case 58: // ALGO
+      case 60: // rsource
+      case 61: // declarations
+      case 62: // declaration
+      case 69: // parameter_value
+      case 70: // function_body
+      case 71: // statement_block
+      case 72: // statements_decl
+      case 73: // statements
+      case 74: // statement_separator
+      case 75: // statement
+      case 76: // expression
+      case 77: // expression_reserved
+      case 78: // conditional_expression
+      case 79: // logical_or_expression
+      case 80: // logical_and_expression
+      case 81: // inclusive_or_expression
+      case 82: // and_expression
+      case 83: // relational_expression
+      case 84: // arit_expression
+      case 85: // primary_expression
+      case 86: // library
+      case 87: // library_name
+      case 88: // library_parms
+      case 90: // identifier
+      case 91: // constant
+      case 92: // op_assign
+      case 93: // op_rel
+      case 94: // op_arit
         value.move< std::string > (YY_MOVE (s.value));
         break;
 

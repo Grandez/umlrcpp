@@ -5,17 +5,28 @@
  *      Author: Javier
  */
 
-#include "Function.h"
+#include <vector>
+
+#include "umlr.h"
+
+using namespace std;
 
 namespace rcomp {
 
-Function::Function() {
-	// TODO Auto-generated constructor stub
+Function::Function() {}
 
-}
+Function::~Function() {}
 
-Function::~Function() {
-	// TODO Auto-generated destructor stub
+vector<string> Function::getSignature(bool full) {
+   std::vector<string> names;
+
+   names.reserve(parms.size());
+   for (auto const& x : parms) {
+	   string n = x->getName();
+	   if (full && x->hasValue()) n = n + " = " + x->getValue();
+	   names.push_back(n);
+   }
+   return names;
 }
 
 } /* namespace rcomp */

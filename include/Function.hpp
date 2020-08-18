@@ -5,25 +5,24 @@
  *      Author: Javier
  */
 
-#ifndef FUNCTION_H_
-#define FUNCTION_H_
+#ifndef FUNCTION_HPP_
+#define FUNCTION_HPP_
 
 #include <string>
-#include "Definition.h"
+#include <vector>
+#include "umlr.h"
 
 using namespace std;
 
 namespace rcomp {
 
-class Function : Definition {
+class Function : public Definition {
 public:
 	Function();
 	virtual ~Function();
-private:
-	string name;
-	string signature;
+	vector<string> getSignature(bool full = false);
 };
 
 } /* namespace rcomp */
 
-#endif /* FUNCTION_H_ */
+#endif /* FUNCTION_HPP_ */

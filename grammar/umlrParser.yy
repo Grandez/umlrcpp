@@ -8,6 +8,7 @@
 
 %code requires {
   #include <string>
+  #include <list>
   #include "umlr.h"
   using namespace rcomp;
   class umlrDriver;
@@ -20,7 +21,7 @@
 %initial-action {
   // Initialize the initial location.
   @$.begin.filename = @$.end.filename = &driver.file;
-  std::cout << "Fichero: " << driver.file << std::endl << std::flush;
+  //std::cout << "Fichero: " << driver.file << std::endl << std::flush;
   unitp = &driver.unit;
 };
 
@@ -37,6 +38,7 @@
    rcomp::Unit *unitp = NULL;
    rcomp::R6 *R6Pend; 
    Function *funcPend;
+   Definition *obj;
 }
 
 
@@ -93,6 +95,8 @@
 %token <std::string> MULT
 %token <std::string> DIV
 
+%token <std::string> SEMICOLON
+
 %token <std::string> ID
 %token <std::string> ID_PKG
 %token <std::string> ID_INTERNAL
@@ -109,14 +113,33 @@
 %type <std::string> declarations
 %type <std::string> declaration
 
+%type <rcomp::Function *> function_definition
+%type <std::string> function_body
+
+%type <std::list<Parameter *>> function_parameters
+%type <std::list<Parameter *>> parameters_decl
+%type <std::list<Parameter *>> parameters_list
+%type <rcomp::Parameter *> parameter
+%type <rcomp::Parameter *> parameter_name
+%type <std::string> parameter_value
+
+
+// LIBRARY
+%type <std::string> library
+%type <std::string> library_name
+%type <std::string> library_parms
+
+// STATEMENT
+
+%type <std::string> statement_block
+%type <std::string> statements
+%type <std::string> statement
+%type <std::string> statements_decl
+%type <std::string> statement_separator
+
 // DECLARATIONS
-%type <std::string> parameters_def
-%type <std::string> parameters_opt
-%type <std::string> parameters_list
-%type <std::string> parameters_list_list
-%type <std::string> parameters
-%type <std::string> parameter
 %type <std::string> expression
+%type <std::string> expression_reserved
 %type <std::string> conditional_expression
 %type <std::string> primary_expression
 %type <std::string> logical_or_expression
@@ -126,10 +149,6 @@
 %type <std::string> relational_expression
 %type <std::string> arit_expression
 
-// LIBRARY
-%type <std::string> library
-%type <std::string> library_name
-%type <std::string> library_parms
 
 %type <std::string> op_arit
 %type <std::string> op_rel
@@ -144,7 +163,7 @@
 
 // Un fichero fuente es un conjunto de declaraciones o nada
 rsource: declarations
-       | %empty                 { cout << "Vacio\n"; }
+       | %empty                 {  }
        ;
 
 // Las declaraciones son cada uno de los tipos de sentencias
@@ -154,14 +173,79 @@ declarations: declaration
             ;
 
 declaration: library
-           | expression
+           | function_definition { unitp->add(obj); }
            ;
-           
 
+////////////////////////////////////////////////////
+// FUNCTION
+////////////////////////////////////////////////////
+
+           
+function_definition: ID op_assign function function_parameters function_body { obj->setName($1); 
+                                                                               obj->addParameters($4); 
+                                                                             }
+                   ;
+
+function_parameters: LPAR parameters_decl RPAR  { $$ = $2; }
+                   ;
+
+parameters_decl: parameters_list    
+               | %empty             {}
+               ;
+                
+parameters_list: parameter                        { $$.push_back($1); }
+               | parameters_list COMMA parameter  { $1.push_back($3); }
+               ;
+
+parameter: parameter_name                    { $$ = $1; }
+         | parameter ASSIGN parameter_value  { $$ = $1->addValue($3); }
+         ;
+
+parameter_name: identifier  { $$ = new Parameter($1); }
+              | ELLIPSIS    { $$ = new Parameter($1); }
+              ;
+
+parameter_value: constant   
+               ;
+                                                    
+function_body: statement_block
+             | statement
+             ;
+
+////////////////////////////////////////////////////
+// STATEMENTS
+////////////////////////////////////////////////////
+
+statement_block: LBRA statements_decl RBRA
+               ;
+
+statements_decl: statements
+               | %empty         {}
+               ;
+statements: statement
+          | statements statement_separator statement
+          ;
+
+statement_separator: SEMICOLON
+                   | %empty         {}
+                   ;                  
+                                         
+////////////////////////////////////////////////////
+// STATEMENT
+////////////////////////////////////////////////////
+
+statement: expression
+         ;
+         
 expression: conditional_expression
-          | primary_expression op_assign expression
+          | primary_expression op_assign expression_reserved
           ;
          
+expression_reserved: FUNCTION
+                   | R6CLASS
+                   | expression         
+                   ;
+                                         
 conditional_expression: logical_or_expression
                       ;
 
@@ -194,28 +278,6 @@ primary_expression: identifier
                   | LPAR expression RPAR
                   ;
                   
-parameters_opt: parameters_def
-              | %empty           {}
-              ;
-
-parameters_def: LPAR parameters_list      RPAR
-              | LIDX parameters_list_list RIDX
-        
-parameters_list: parameters
-               | %empty            {}
-               ;
-
-parameters_list_list: LIDX parameters_list RIDX
-                    | parameters_list
-                    ;
-
-parameters: parameter
-          | parameters COMMA parameter
-          ;
-          
-parameter: expression
-         ;
-         
 ////////////////////////////////////////////////////
 // LIBRARY
 ////////////////////////////////////////////////////
@@ -234,10 +296,12 @@ library_parms: %empty         {}
 // 
 ////////////////////////////////////////////////////
 
+function: FUNCTION  { obj = new Function(); }
+ 
 identifier: ID
           ;
           
-constant: STRING
+constant: STRING  
         | NUMBER
         ;
 
